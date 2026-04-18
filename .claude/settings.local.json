@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(export PATH=\"$PATH:/usr/local/bin:/opt/homebrew/bin\")",
+      "Bash(node -e ' *)",
+      "Bash(node node_modules/.bin/next dev)",
+      "Bash(echo \"Started PID $!\")",
+      "Bash(echo \"Restarted PID $!\")"
+    ]
+  }
+}
