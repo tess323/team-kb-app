@@ -19,25 +19,26 @@ export default async function PersonaDetailPage({
 
   return (
     <main className="max-w-7xl mx-auto px-4 py-10">
-      {/* Back link + header */}
+      {/* Back link */}
       <Link
         href="/personas"
-        className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-indigo-600 mb-6 transition-colors"
+        className="inline-flex items-center gap-1.5 text-sm text-ink/50 hover:text-hunter mb-6 transition-colors"
       >
-        <span>←</span> All personas
+        ← All personas
       </Link>
 
+      {/* Header */}
       <div className="flex items-center gap-4 mb-8">
-        <div className="w-14 h-14 rounded-full bg-indigo-500 flex items-center justify-center text-white font-bold text-lg shrink-0">
+        <div className="w-14 h-14 rounded-md bg-hunter flex items-center justify-center text-cream font-semibold text-lg shrink-0">
           {initials}
         </div>
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">{name}</h1>
-          <p className="text-gray-500 text-sm mt-0.5">{role}</p>
+          <h1 className="text-4xl font-sans font-semibold tracking-tight text-ink leading-tight">{name}</h1>
+          <p className="text-sm text-ink/50 mt-1">{role}</p>
           <div className="flex gap-2 mt-2">
-            <Pill color="sky">{gradeBand}</Pill>
-            <Pill color="green">{relationshipStatus}</Pill>
-            <Pill color="violet">{motivationSpectrum}</Pill>
+            <HeaderPill>{gradeBand}</HeaderPill>
+            <HeaderPill>{relationshipStatus}</HeaderPill>
+            <HeaderPill>{motivationSpectrum}</HeaderPill>
           </div>
         </div>
       </div>
@@ -45,91 +46,90 @@ export default async function PersonaDetailPage({
       {/* Bento grid */}
       <div className="grid grid-cols-3 gap-4">
 
-        {/* 1. Background + motivation bar — col-span-2 */}
-        <div className="col-span-2 bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
+        {/* 1. Background + motivation bar — parchment, col-span-2 */}
+        <div className="col-span-2 bg-parchment border border-parchment-dark rounded-md p-6">
           <BoxLabel>Background</BoxLabel>
-          <p className="text-gray-700 text-sm leading-relaxed mt-2">{background}</p>
-
+          <p className="text-sm text-ink leading-relaxed mt-2">{background}</p>
           <div className="mt-5">
-            <div className="flex justify-between text-xs text-gray-500 mb-1.5">
+            <div className="flex justify-between text-xs text-ink/50 mb-1.5">
               <span>Voluntold</span>
-              <span className="font-medium text-gray-700">{motivationSpectrum}</span>
+              <span className="font-medium text-ink/70">{motivationSpectrum}</span>
               <span>Early adopter</span>
             </div>
-            <div className="relative h-2 bg-gray-100 rounded-full overflow-hidden">
+            <div className="relative h-1.5 bg-parchment-dark rounded-full overflow-hidden">
               <div
-                className="absolute inset-y-0 left-0 bg-indigo-500 rounded-full"
+                className="absolute inset-y-0 left-0 bg-hunter rounded-full"
                 style={{ width: `${motivationScore}%` }}
               />
             </div>
             <div className="flex justify-end mt-1">
-              <span className="text-xs text-gray-400">{motivationScore}/100</span>
+              <span className="text-xs text-ink/40">{motivationScore}/100</span>
             </div>
           </div>
         </div>
 
-        {/* 2. Widget placeholder — col-span-1 */}
-        <div className="col-span-1 border-2 border-dashed border-gray-300 rounded-2xl p-6 flex flex-col items-center justify-center gap-2 text-gray-400 hover:border-indigo-300 hover:text-indigo-400 transition-colors cursor-pointer">
-          <span className="text-2xl">+</span>
+        {/* 2. This week widget — slate tint, dashed */}
+        <div className="col-span-1 bg-slate-muted border-2 border-dashed border-slate-light rounded-md p-6 flex flex-col items-center justify-center gap-2 text-slate/60 hover:border-slate hover:text-slate transition-colors cursor-pointer">
+          <span className="text-2xl leading-none">+</span>
           <BoxLabel>What they'll see this week</BoxLabel>
           <span className="text-xs">add widget</span>
         </div>
 
-        {/* 3. What this should feel like — purple tint */}
-        <div className="col-span-1 bg-purple-50 border border-purple-200 rounded-2xl p-5">
+        {/* 3. Feel like — cream */}
+        <div className="col-span-1 bg-cream border border-cream-dark rounded-md p-5">
           <BoxLabel>What this should feel like</BoxLabel>
-          <p className="text-purple-900 text-sm leading-relaxed mt-2">{feelLike}</p>
+          <p className="text-sm text-ink leading-relaxed mt-2">{feelLike}</p>
         </div>
 
-        {/* 4. Excited about */}
-        <div className="col-span-1 bg-white border border-gray-200 rounded-2xl p-5 shadow-sm">
+        {/* 4. Excited — hunter tint */}
+        <div className="col-span-1 bg-hunter-muted border border-hunter-light rounded-md p-5">
           <BoxLabel>Excited about</BoxLabel>
-          <p className="text-gray-700 text-sm leading-relaxed mt-2">{excited}</p>
+          <p className="text-sm text-ink leading-relaxed mt-2">{excited}</p>
         </div>
 
-        {/* 5. Nervous about */}
-        <div className="col-span-1 bg-white border border-gray-200 rounded-2xl p-5 shadow-sm">
+        {/* 5. Nervous — white/border, no tint */}
+        <div className="col-span-1 bg-white border border-parchment-dark rounded-md p-5">
           <BoxLabel>Nervous about</BoxLabel>
-          <p className="text-gray-700 text-sm leading-relaxed mt-2">{nervous}</p>
+          <p className="text-sm text-ink leading-relaxed mt-2">{nervous}</p>
         </div>
 
-        {/* 6. Success looks like — green tint */}
-        <div className="col-span-1 bg-green-50 border border-green-200 rounded-2xl p-5">
+        {/* 6. Success — ochre tint */}
+        <div className="col-span-1 bg-ochre-muted border border-ochre-light rounded-md p-5">
           <BoxLabel>Success looks like</BoxLabel>
-          <p className="text-green-900 text-sm leading-relaxed mt-2">{successLooks}</p>
+          <p className="text-sm text-ink leading-relaxed mt-2">{successLooks}</p>
         </div>
 
-        {/* 7. Failure looks like — red tint */}
-        <div className="col-span-1 bg-red-50 border border-red-200 rounded-2xl p-5">
+        {/* 7. Failure — rose tint */}
+        <div className="col-span-1 bg-rose-muted border border-rose-light rounded-md p-5">
           <BoxLabel>Failure looks like</BoxLabel>
-          <p className="text-red-900 text-sm leading-relaxed mt-2">{failureLooks}</p>
+          <p className="text-sm text-ink leading-relaxed mt-2">{failureLooks}</p>
         </div>
 
         {/* 8. Communication channels — col-span-3 */}
-        <div className="col-span-3 bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
+        <div className="col-span-3 bg-parchment border border-parchment-dark rounded-md p-6">
           <BoxLabel>Communication channels</BoxLabel>
           <div className="grid grid-cols-2 gap-6 mt-4">
             <div>
-              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">
+              <p className="text-2xs font-semibold text-ink/50 uppercase tracking-wide mb-3">
                 Within our control
               </p>
               <ul className="space-y-2">
                 {channelsWithinControl.map((c, i) => (
-                  <li key={i} className="flex items-start gap-2 text-sm text-gray-700">
-                    <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-green-500 shrink-0" />
+                  <li key={i} className="flex items-start gap-2 text-sm text-ink">
+                    <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-hunter shrink-0" />
                     {c}
                   </li>
                 ))}
               </ul>
             </div>
             <div>
-              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">
+              <p className="text-2xs font-semibold text-ink/50 uppercase tracking-wide mb-3">
                 Outside our control
               </p>
               <ul className="space-y-2">
                 {channelsOutsideControl.map((c, i) => (
-                  <li key={i} className="flex items-start gap-2 text-sm text-gray-700">
-                    <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-red-400 shrink-0" />
+                  <li key={i} className="flex items-start gap-2 text-sm text-ink">
+                    <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-rose shrink-0" />
                     {c}
                   </li>
                 ))}
@@ -138,27 +138,25 @@ export default async function PersonaDetailPage({
           </div>
         </div>
 
-        {/* 9. Journey by phase — col-span-3 */}
-        <div className="col-span-3 bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
+        {/* 9. Journey — col-span-3 */}
+        <div className="col-span-3 bg-parchment border border-parchment-dark rounded-md p-6">
           <BoxLabel>Journey</BoxLabel>
           <div className="grid grid-cols-4 gap-5 mt-4">
             {(
               [
-                { key: "preLaunch",    label: "Pre-launch",     border: "border-purple-500", text: "text-purple-700" },
-                { key: "launch",       label: "Launch",         border: "border-green-500",  text: "text-green-700"  },
-                { key: "summer",       label: "Summer",         border: "border-amber-500",  text: "text-amber-700"  },
-                { key: "backToSchool", label: "Back to school", border: "border-blue-500",   text: "text-blue-700"   },
+                { key: "preLaunch",    label: "Pre-launch",     border: "border-slate",  text: "text-slate"  },
+                { key: "launch",       label: "Launch",         border: "border-hunter", text: "text-hunter" },
+                { key: "summer",       label: "Summer",         border: "border-ochre",  text: "text-ochre"  },
+                { key: "backToSchool", label: "Back to school", border: "border-rose",   text: "text-rose"   },
               ] as const
             ).map(({ key, label, border, text }) => (
               <div key={key} className={`border-t-4 ${border} pt-4`}>
-                <p className={`text-xs font-semibold uppercase tracking-wide mb-3 ${text}`}>
+                <p className={`text-2xs font-semibold uppercase tracking-wide mb-3 ${text}`}>
                   {label}
                 </p>
                 <ul className="space-y-3">
                   {journey[key].moments.map((m, i) => (
-                    <li key={i} className="text-sm text-gray-700 leading-relaxed">
-                      {m}
-                    </li>
+                    <li key={i} className="text-sm text-ink leading-relaxed">{m}</li>
                   ))}
                 </ul>
               </div>
@@ -173,18 +171,13 @@ export default async function PersonaDetailPage({
 
 function BoxLabel({ children }: { children: React.ReactNode }) {
   return (
-    <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">{children}</p>
+    <p className="text-2xs font-semibold text-ink/50 uppercase tracking-wide">{children}</p>
   );
 }
 
-function Pill({ children, color }: { children: React.ReactNode; color: string }) {
-  const variants: Record<string, string> = {
-    sky:    "bg-sky-100 text-sky-800",
-    green:  "bg-green-100 text-green-800",
-    violet: "bg-violet-100 text-violet-800",
-  };
+function HeaderPill({ children }: { children: React.ReactNode }) {
   return (
-    <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${variants[color] ?? "bg-gray-100 text-gray-700"}`}>
+    <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-parchment-dark text-parchment-text">
       {children}
     </span>
   );
