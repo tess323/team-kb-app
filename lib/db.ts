@@ -14,7 +14,7 @@ let _db: ReturnType<typeof createClient> | null = null;
 function getDb() {
   if (_db) return _db;
   const url = process.env.TURSO_DATABASE_URL
-    ?? `file:${path.join(process.cwd(), "data.db")}`;
+    ?? `file:${process.env.VERCEL ? "/tmp/data.db" : path.join(process.cwd(), "data.db")}`;
   const authToken = process.env.TURSO_AUTH_TOKEN;
   _db = createClient({ url, authToken });
   return _db;

@@ -35,7 +35,8 @@ export default function Home() {
     try {
       const res = await fetch("/api/records");
       if (!res.ok) throw new Error("Failed to load records");
-      setRecords(await res.json());
+      const data = await res.json();
+      setRecords(Array.isArray(data) ? data : []);
     } catch {
       setRecordsError("Could not load records.");
     } finally {
