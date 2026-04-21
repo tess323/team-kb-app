@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className={`${jakarta.variable} bg-cream min-h-screen`}>
+      <body className={`${jakarta.variable} bg-cream min-h-screen`} suppressHydrationWarning>
         <nav className="bg-parchment border-b border-parchment-dark">
           <div className="max-w-7xl mx-auto px-4 h-14 flex items-center gap-6">
             <Link href="/" className="font-semibold text-ink hover:text-hunter transition-colors">
