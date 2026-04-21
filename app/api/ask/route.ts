@@ -1,15 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
 import { fetchKnowledgeBase } from "@/lib/gdrive";
+import { saveConversation } from "@/lib/db";
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
+type Message = { role: "user" | "assistant"; content: string };
+
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  const question: string = body?.question;
+  const messages: Message[] = body?.messages;
 
-  if (!question || typeof question !== "string" || !question.trim()) {
-    return NextResponse.json({ error: "question is required" }, { status: 400 });
+  if (!Array.isArray(messages) || messages.length === 0) {
+    return NextResponse.json({ error: "messages array is required" }, { status: 400 });
   }
 
   let context: string;
@@ -29,8 +32,11 @@ export async function POST(req: NextRequest) {
     model: "claude-sonnet-4-6",
     max_tokens: 1024,
     system: systemPrompt,
-    messages: [{ role: "user", content: question.trim() }],
+    messages,
   });
+
+  const userMessage = messages[messages.length - 1].content;
+  let assistantResponse = "";
 
   const readable = new ReadableStream({
     async start(controller) {
@@ -40,9 +46,13 @@ export async function POST(req: NextRequest) {
             chunk.type === "content_block_delta" &&
             chunk.delta.type === "text_delta"
           ) {
+            assistantResponse += chunk.delta.text;
             controller.enqueue(new TextEncoder().encode(chunk.delta.text));
           }
         }
+        saveConversation(userMessage, assistantResponse).catch((err) =>
+          console.error("[/api/ask] failed to save conversation:", err)
+        );
       } catch (err) {
         console.error("[/api/ask] stream error:", err);
       } finally {
