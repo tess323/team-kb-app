@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { getAllPersonas, getPersonaById } from "@/lib/db";
 import PersonaDocActions from "./PersonaDocActions";
 import MarkdownContent from "./MarkdownContent";
+import TimelineSection from "./TimelineSection";
 
 export async function generateStaticParams() {
   const personas = await getAllPersonas();
@@ -193,6 +194,9 @@ export default async function PersonaDetailPage({
             </div>
           </div>
         )}
+
+        {/* Communication timeline */}
+        <TimelineSection personaId={persona.persona_id} />
 
       </div>
     </main>

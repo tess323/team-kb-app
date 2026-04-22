@@ -26,6 +26,8 @@ const PERSONA_NEW_COLUMNS = [
   "comms_in_control TEXT",
   "comms_out_of_control TEXT",
   "content TEXT",
+  "timeline_data TEXT",
+  "timeline_gaps TEXT",
 ];
 
 async function setup() {
@@ -137,6 +139,8 @@ export type PersonaRow = {
   comms_in_control: string[] | null;
   comms_out_of_control: string[] | null;
   content: string | null;
+  timeline_data: string | null;
+  timeline_gaps: string[] | null;
   google_doc_id: string | null;
   synced_content: string | null;
   last_synced: string | null;
@@ -156,6 +160,7 @@ function parseRow(row: Record<string, unknown>): PersonaRow {
     needs: parseJson(row.needs),
     comms_in_control: parseJson(row.comms_in_control),
     comms_out_of_control: parseJson(row.comms_out_of_control),
+    timeline_gaps: parseJson(row.timeline_gaps),
   };
 }
 
@@ -228,6 +233,31 @@ export async function upsertPersonaByName(data: PersonaInput): Promise<number> {
       args: [data.name, ...args],
     });
     return Number(result.lastInsertRowid);
+  }
+}
+
+export async function savePersonaTimeline(personaId: number, timelineData: string) {
+  await ready;
+  await db.execute({
+    sql: "UPDATE personas SET timeline_data = ? WHERE persona_id = ?",
+    args: [timelineData, personaId],
+  });
+}
+
+export async function dismissTimelineGap(personaId: number, gapId: string) {
+  await ready;
+  const result = await db.execute({
+    sql: "SELECT timeline_gaps FROM personas WHERE persona_id = ?",
+    args: [personaId],
+  });
+  const existing: string[] = result.rows[0]?.timeline_gaps
+    ? JSON.parse(result.rows[0].timeline_gaps as string)
+    : [];
+  if (!existing.includes(gapId)) {
+    await db.execute({
+      sql: "UPDATE personas SET timeline_gaps = ? WHERE persona_id = ?",
+      args: [JSON.stringify([...existing, gapId]), personaId],
+    });
   }
 }
 
