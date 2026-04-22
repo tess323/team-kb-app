@@ -1,0 +1,496 @@
+[
+  {
+    "name": "Margaret Chen",
+    "role": "K–5 Library Media Specialist",
+    "grade_band": "K-5",
+    "relationship": "Legacy",
+    "motivation": "Early Adopter",
+    "current_course": "CS Connections (Grades 3–5)",
+    "goals": [
+      "Ensure every kid in her building gets a meaningful intro to computational thinking",
+      "Stay current so she can speak credibly to parents and her principal about why this matters",
+      "Maintain her reputation as the 'tech person' who makes CS accessible and fun"
+    ],
+    "pain_points": [
+      "Feels the organization has grown away from her — the grassroots community energy of the early days is gone",
+      "Has heard almost nothing from CodeAI directly in the past two years",
+      "Worried the rebrand signals that the 'simple, joyful' entry-level CS she teaches is no longer valued",
+      "Her principal keeps asking her to justify the rotation time against reading intervention needs"
+    ],
+    "ai_relationship": "Curious but cautious. Has started exploring how to talk about AI with 3rd graders but doesn't feel equipped yet. Worries that 'AI' in the name will make parents nervous and generate pushback she'll have to absorb.",
+    "rebrand_risk": "She finds out about the name change from a colleague before CodeAI tells her directly. She feels left behind — again.",
+    "needs": [
+      "A direct, personal acknowledgment of her role in building this organization",
+      "Clear messaging she can use with her principal and parents",
+      "Reassurance that foundational CS content for young learners is not being abandoned",
+      "An invitation to be part of what comes next — not just informed of it"
+    ],
+    "quote": "I was there at the beginning. I trained half the teachers in this district. I just want to know someone still remembers that.",
+    "background": "Maggie has been the library media specialist at Riverside Elementary for over a decade. She started teaching Hour of Code activities in 2013 and was an early adopter who attended a Code.org event, received a stipend, and returned to her school completely evangelized. She now runs CS Connections as a standalone enrichment rotation for grades 3–5, seeing every student in the building for 45-minute sessions on a 6-week cycle. 54 years old, suburban school district in Ohio, 22 years in education.",
+    "excited_about": "Validation that CS education is evolving and still relevant; the possibility of being recognized and re-engaged as a founding voice in the movement; new talking points that help her make the case to her principal and parents for why CS — and now AI — matters at the elementary level.",
+    "nervous_about": "That the rebrand to 'AI' signals the organization is moving away from foundational, joyful CS for young learners; that parents will push back on 'AI' in the name; that she will be the last to know and the first to field questions she can't answer.",
+    "success_looks_like": "Maggie receives a personal, direct communication ahead of the public announcement that honors her history and gives her the language she needs. She walks into her next session confident, equipped to answer parent questions, and feeling like she still belongs to this community.",
+    "failure_looks_like": "Maggie hears about the rebrand from a colleague or parent, feels blindsided, and begins to emotionally disengage from CodeAI. Her principal questions the value of the rotation and she has no strong response. She stops identifying as part of the CodeAI community.",
+    "aim_feeling": "Seen, valued, and re-invited. She should feel like a founding member being welcomed into the next chapter — not an afterthought receiving a mass email.",
+    "comms_in_control": [
+      "Direct personal email from CodeAI leadership ahead of public announcement",
+      "Legacy teacher acknowledgment campaign or dedicated communication",
+      "Parent-facing messaging toolkit",
+      "Principal-facing talking points",
+      "FAQ addressing elementary-level CS and what the rebrand means for younger learners",
+      "CodeAI platform in-product messaging"
+    ],
+    "comms_out_of_control": [
+      "Colleague word-of-mouth",
+      "Local parent community groups and social media",
+      "School or district newsletter coverage",
+      "Principal's interpretation and communication of the rebrand"
+    ]
+  },
+  {
+    "name": "DeShawn Williams",
+    "role": "9–12 CS Teacher",
+    "grade_band": "9-12",
+    "relationship": "Active",
+    "motivation": "Early Adopter",
+    "current_course": "CS Principles (x3 sections), AP CS A (x1 section)",
+    "goals": [
+      "Build a pipeline of technically literate students who can compete for top CS programs and jobs",
+      "Integrate AI meaningfully into his curriculum without losing the rigor of foundational CS",
+      "Become a teacher leader — facilitate PD and mentor newer CS teachers"
+    ],
+    "pain_points": [
+      "Professionally isolated — no CS colleagues in his building to collaborate with or debrief after a hard class",
+      "Constantly defending his department's existence to administrators focused on standardized test scores",
+      "Students are already using AI tools (ChatGPT, Copilot) in ways he hasn't been given a curriculum to address yet",
+      "Mid-lesson platform changes without warning are his nightmare scenario"
+    ],
+    "ai_relationship": "Enthusiastic and technically informed. He understands the underlying CS. His concern is pedagogical — he wants a structured, rigorous way to teach AI, not just activities that gesture at it.",
+    "rebrand_risk": "His students notice the logo change mid-class and start asking questions he hasn't been briefed to answer. He looks uninformed in front of his students — the one thing a teacher cannot afford.",
+    "needs": [
+      "Advance notice — non-negotiable",
+      "A clear technical explanation of what is changing and what isn't on the platform",
+      "A roadmap for where AI curriculum is going",
+      "An accelerated path to becoming a facilitator",
+      "Community with other solo CS teachers who get it"
+    ],
+    "quote": "My kids are already living in the AI world. I need the curriculum to catch up to where they actually are.",
+    "background": "DeShawn teaches three sections of CS Principles and one section of AP CS A at a large urban high school in Atlanta, GA. He came from a software engineering background and made a career change into teaching. He is deeply passionate about getting Black and Latino students into tech pathways and uses CodeAI's platform every single day. He is the only CS teacher in his building. 34 years old, 7 years in education.",
+    "excited_about": "A clear, rigorous AI curriculum roadmap that finally catches up to where his students already are; recognition that AI + CS is the right direction; an accelerated path to facilitation and teacher leadership; a community of other solo CS teachers who share his experience.",
+    "nervous_about": "Being caught off guard in front of his students during the rebrand transition; platform disruptions mid-unit; AI curriculum that lacks rigor or depth; being overlooked for the leadership opportunities he's ready for.",
+    "success_looks_like": "DeShawn receives advance notice well before the rebrand goes live, is fully briefed on what's changing on the platform, has a clear roadmap for AI curriculum integration, and is connected to a fast-track facilitator pathway. He walks into class the day of the rebrand with confident answers ready.",
+    "failure_looks_like": "A student notices the logo change mid-lesson and DeShawn is caught flat-footed. He loses credibility in the room. He feels like CodeAI didn't think about active teachers when they planned the rollout, and his trust in the organization erodes.",
+    "aim_feeling": "Respected, informed, and ahead of the curve. He should feel like CodeAI saw him coming — and built the next chapter with someone like him in mind.",
+    "comms_in_control": [
+      "Pre-announcement direct email to active teachers with explicit advance notice",
+      "Platform in-product notification explaining what is and isn't changing",
+      "AI curriculum roadmap document",
+      "Facilitator pathway information and application",
+      "Teacher community or cohort invitation for solo CS teachers",
+      "FAQ for high school CS teachers"
+    ],
+    "comms_out_of_control": [
+      "Student social media and peer networks noticing the rebrand",
+      "Tech press and education media coverage",
+      "Colleague word-of-mouth within his school",
+      "Administrator reactions to the rebrand news"
+    ]
+  },
+  {
+    "name": "Linda Kowalski",
+    "role": "Middle School Technology Teacher",
+    "grade_band": "6-8",
+    "relationship": "Active",
+    "motivation": "Voluntold",
+    "current_course": "CS Discoveries (Units 1–3, 6–8 grade split implementation)",
+    "goals": [
+      "Get through the school year without her students or principal realizing how lost she feels",
+      "Find something in the content she can connect to and believe in",
+      "Not be publicly embarrassed by a student or parent who knows more than she does"
+    ],
+    "pain_points": [
+      "Was never asked if she wanted to teach this — it was assigned",
+      "Feels behind every single day; the content moves faster than she can learn it",
+      "No instructional coach in her building who understands CS",
+      "Parents are asking her questions about AI that she cannot answer",
+      "The rebrand adds another layer of change on top of an already destabilizing year",
+      "Wishes CodeAI would develop more supports like autograding to bridge her content knowledge gap"
+    ],
+    "ai_relationship": "Anxious. She sees AI as one more thing she doesn't understand that she's now expected to teach. The name change to CodeAI makes her feel like the bar just got raised even higher.",
+    "rebrand_risk": "She sees the new branding and assumes the curriculum is changing too — she panics, emails her principal, and creates unnecessary escalation.",
+    "needs": [
+      "Radical simplicity — a clear message that the curriculum she's been teaching is still here and still works",
+      "Step-by-step guidance",
+      "A live human to ask questions to",
+      "Reassurance that 'AI' in the name doesn't mean her course just changed overnight",
+      "More embedded supports like autograding to reduce her content knowledge burden"
+    ],
+    "quote": "I just need someone to tell me I'm doing okay and tell me what page to turn to next.",
+    "background": "Linda has been a 7th and 8th grade technology teacher for years — teaching keyboarding, digital citizenship, and basic productivity software. Last year, her district adopted a new CS mandate and her principal assigned her to teach CS Discoveries. She has no CS background, attended one online PD session in the fall, got overwhelmed, and has been cobbling together lessons ever since. 47 years old, mid-size suburban district in Michigan, 18 years in education.",
+    "excited_about": "Nothing immediately — she is in survival mode. However, if messaged correctly, she could be relieved to learn that the curriculum isn't changing and that CodeAI is adding more support resources for teachers like her.",
+    "nervous_about": "That 'CodeAI' means the curriculum has fundamentally changed and she now has to relearn everything; that the bar has been raised and she's even further behind; that a parent or student will confront her with questions she can't answer about the new name.",
+    "success_looks_like": "Linda receives a clear, simple, calming message before the rebrand goes live that says: your curriculum is the same, you are doing the right thing, here is exactly what to do if anyone asks. She doesn't escalate to her principal. She continues teaching without disruption.",
+    "failure_looks_like": "Linda sees the new name and logo, assumes the curriculum has changed, panics, emails her principal, and the principal pulls her from CS instruction or contacts the district. Linda disengages from CodeAI entirely and the district loses a fragile but active implementation.",
+    "aim_feeling": "Calm, reassured, and supported. She should feel like someone thought about her specifically and made the transition as easy as possible.",
+    "comms_in_control": [
+      "Pre-announcement email to active teachers with explicit reassurance that curriculum is unchanged",
+      "Simple one-page FAQ designed for non-CS teachers",
+      "In-platform messaging on first login after rebrand",
+      "Teacher support line or live chat access",
+      "Principal-facing talking points to prevent unnecessary escalation"
+    ],
+    "comms_out_of_control": [
+      "District administrator interpretations and forwarded communications",
+      "Parent community social media and local news",
+      "Colleague rumors within her building",
+      "Her principal's independent reaction to the rebrand"
+    ]
+  },
+  {
+    "name": "Priya Nair",
+    "role": "District Curriculum Director",
+    "grade_band": "District",
+    "relationship": "Prospective",
+    "motivation": "Institutional",
+    "current_course": "Evaluating full K–12 implementation (no active course yet — in procurement/evaluation phase)",
+    "goals": [
+      "Build a defensible, research-backed K–12 CS and AI curriculum pathway",
+      "Satisfy state policy requirements and the superintendent's public commitment to 'AI readiness'",
+      "Avoid a costly mistake — her reputation is on the line with every adoption decision",
+      "Ensure the curriculum is equitable and accessible across all schools in the district, including under-resourced ones"
+    ],
+    "pain_points": [
+      "Code.org doesn't fit neatly into her procurement system — the 'free' model creates organizational ambiguity",
+      "She is fielding AI-related concerns from other departments who feel AI undermines their disciplines and allows students to cheat",
+      "The vendor landscape is noisy — she can't tell who is credible and who is selling hype",
+      "The rebrand, if not positioned carefully, could make her question whether the organization is stable"
+    ],
+    "ai_relationship": "Strategic and cautious. She wants to position her district correctly on AI education but is wary of moving too fast on something that could generate parent or school board backlash.",
+    "rebrand_risk": "She reads about the rebrand in a press article before CodeAI contacts her directly. She wonders if the free model is changing. She puts the evaluation on hold pending clarity.",
+    "needs": [
+      "A proactive briefing from a CodeAI district partner contact before the rebrand goes public",
+      "Clear written documentation on what is and isn't changing — especially pricing",
+      "Evidence of curriculum quality and rigor",
+      "Tools to manage cross-departmental resistance",
+      "A credible answer to 'why AI + CS, and why now?'"
+    ],
+    "quote": "I need to be able to stand in front of the school board and explain exactly why we chose this and what students will be able to do because of it.",
+    "background": "Priya oversees K–12 curriculum adoption across a district of 47,000 students in Texas. She holds authority over what gets officially sanctioned as district curriculum, including CS. Her district is under pressure from the state to show CS and AI readiness, and she has been tasked with building a coherent K–12 CS and AI pathway from scratch. She discovered Code.org organically through a conference presentation and has been exploring its viability as the district's primary curriculum vendor. 41 years old, 14 years in education, 4 in district admin.",
+    "excited_about": "The rebrand potentially signals that CodeAI is a serious, forward-thinking organization aligned with where state policy is heading; a clearer AI + CS narrative could make the internal case for adoption easier to make to her superintendent and school board.",
+    "nervous_about": "Whether the free model is changing; whether the organization is stable enough for a large district commitment; whether the rebrand will generate political or parent backlash that makes her adoption decision look reckless; cross-departmental resistance from ELA and other content areas.",
+    "success_looks_like": "Priya receives a proactive, personalized briefing before the public announcement, gets clear written answers to her procurement and pricing questions, and walks into her next superintendent meeting with a compelling, board-ready rationale for CodeAI adoption.",
+    "failure_looks_like": "Priya reads about the rebrand in a press article, interprets it as a sign of organizational instability or pricing change, and puts the evaluation on indefinite hold. A competing vendor fills the vacuum. The district's 47,000 students lose access to what could have been a strong implementation.",
+    "aim_feeling": "Confident and informed. She should feel like CodeAI treats her as a serious institutional partner, not just a prospective customer.",
+    "comms_in_control": [
+      "Proactive direct outreach from CodeAI district partner team ahead of public announcement",
+      "Written FAQ and documentation on pricing, curriculum, and organizational stability",
+      "Research and evidence brief on curriculum quality and rigor",
+      "Cross-departmental resistance toolkit",
+      "School board presentation template or talking points",
+      "State policy alignment documentation"
+    ],
+    "comms_out_of_control": [
+      "National and local press coverage of the rebrand",
+      "Competing vendor outreach and positioning",
+      "State education agency communications",
+      "Internal district politics and cross-departmental conversations",
+      "Social media and parent community reactions"
+    ]
+  },
+  {
+    "name": "Tom Grady",
+    "role": "High School Principal",
+    "grade_band": "School",
+    "relationship": "Informal/Active",
+    "motivation": "Cautious",
+    "current_course": "CS Fundamentals and CS Discoveries (informal use — no formal district adoption)",
+    "goals": [
+      "Keep his small staff supported and retain good teachers in a rural area where recruitment is difficult",
+      "Satisfy state CS requirements without overloading teachers who already cover multiple subjects",
+      "Be responsive to parent expectations without opening himself up to controversy"
+    ],
+    "pain_points": [
+      "His CS 'teacher' is really a math teacher with a split load who is doing her best — she needs more support than he can provide",
+      "Budget is extremely constrained — anything with a cost is essentially a no",
+      "He doesn't have time to evaluate curriculum himself; he relies on his teachers to tell him if something works",
+      "AI is a source of active controversy in his community — he has parents on both sides"
+    ],
+    "ai_relationship": "Wary. His community is divided. He has had at least two conversations with parents who are concerned about AI in school. He does not want CodeAI — or anyone — to hand him a controversy.",
+    "rebrand_risk": "A parent sees the 'AI' name change in local news and calls the school. Tom is caught off guard, unsure what to say, and defaults to distancing himself from the platform.",
+    "needs": [
+      "Simple, plain-language talking points about what CodeAI is and is not",
+      "Reassurance that the curriculum is still free",
+      "A clear answer to the 'is this safe for students?' question",
+      "Parent-facing language he can use if the phone rings",
+      "Minimal time investment to stay informed"
+    ],
+    "quote": "I'm not against this — I just can't afford to walk into a school board meeting unprepared.",
+    "background": "Tom runs a rural high school of 380 students in Iowa. He has one CS teacher — a math teacher who was reassigned to cover a CS elective when the state introduced a new CS graduation pathway. He's supportive of CS in the abstract but is managing 40 other priorities simultaneously. He heard about CodeAI through his CS teacher and has loosely approved its use without engaging with the organization directly. 52 years old, 26 years in education, 8 as principal.",
+    "excited_about": "Very little, proactively — Tom is not tracking CodeAI closely enough to feel excitement. However, if reached with the right message, he could be relieved that the curriculum is still free and that there are parent-facing resources ready to go if he needs them.",
+    "nervous_about": "Parent phone calls and community backlash over the 'AI' name; being put in an uncomfortable position at a school board meeting; anything that creates additional work for an already stretched teacher; cost implications.",
+    "success_looks_like": "Tom has a simple one-pager in his desk before the rebrand goes public. When a parent calls, he calmly explains what CodeAI is, confirms it's free, and assures them students are safe. The conversation ends in two minutes. He moves on.",
+    "failure_looks_like": "Tom is blindsided by a parent call or a school board question about 'CodeAI.' He doesn't have an answer. He tells his math teacher to stop using the platform until he figures out what's going on. A fragile but real implementation collapses.",
+    "aim_feeling": "Prepared and unburdened. He should feel like CodeAI did the work for him — handed him everything he needs and asked nothing in return.",
+    "comms_in_control": [
+      "Simple plain-language principal briefing document",
+      "Parent-facing one-pager or FAQ",
+      "Confirmation that curriculum remains free — in writing",
+      "Student safety and data privacy summary",
+      "School board talking points",
+      "Notification through his CS teacher as a trusted relay"
+    ],
+    "comms_out_of_control": [
+      "Local news coverage of the rebrand",
+      "Parent community social media and word-of-mouth",
+      "State education agency communications",
+      "His CS teacher's own understanding and communication of the change"
+    ]
+  },
+  {
+    "name": "Carmen Alvarez",
+    "role": "Instructional Technology Specialist",
+    "grade_band": "District",
+    "relationship": "Informal/Active",
+    "motivation": "Early Adopter",
+    "current_course": "Facilitating informal PD using CS Fundamentals and AI Foundations materials (not a formal facilitator)",
+    "goals": [
+      "Build a district-wide AI literacy framework that is practical, not performative",
+      "Get formal recognition and backing for the work she's already doing informally",
+      "Become a formal CodeAI facilitator",
+      "Give teachers confidence rather than anxiety when it comes to AI"
+    ],
+    "pain_points": [
+      "Operating without a budget line, a title change, or formal authority — all on top of her existing role",
+      "The CS curriculum director role doesn't exist in her district, so she has no organizational home",
+      "Has never been contacted by CodeAI directly, despite actively using and distributing their materials",
+      "Worried that the rebrand to 'AI' will make teachers in her district even more anxious and harder to bring along"
+    ],
+    "ai_relationship": "Highly engaged and knowledgeable. She has done her own learning and is building her own POV. She is a force multiplier who has been operating without CodeAI's knowledge or support.",
+    "rebrand_risk": "She learns about the rebrand the same way her teachers do — through a generic email blast. She feels unrecognized and invisible, despite being one of CodeAI's most active informal ambassadors.",
+    "needs": [
+      "To be found and recognized — direct outreach acknowledging what she's been doing",
+      "A path to becoming a formal facilitator",
+      "Access to the full curriculum toolkit with proper permissions",
+      "A community of people doing what she's doing",
+      "Formal backing and resources to legitimize the work she's already built"
+    ],
+    "quote": "I've been out here doing this work for a year with no budget and no title. I just want someone from CodeAI to actually know my name.",
+    "background": "Carmen sits within a mid-size urban district's instructional support team in California and has become the de facto 'AI person' after her assistant superintendent delegated AI strategy to her in a staff meeting. She has built her own PD workshop for teachers using Code.org's open-source materials — without Code.org knowing. She is highly motivated, self-directed, and has been quietly building CodeAI's reach in her district for over a year through her own initiative. 38 years old, 11 years in education, 3 in instructional support.",
+    "excited_about": "The possibility of being formally recognized and brought into the CodeAI ecosystem; a facilitator pathway that legitimizes the work she's already doing; access to full resources and permissions; connection to a national community of people like her.",
+    "nervous_about": "That the rebrand will amplify teacher anxiety around AI and make her job harder; that she'll receive the same generic communication as everyone else and remain invisible to CodeAI; that the formal facilitator path will be too slow or bureaucratic for the urgency of her situation.",
+    "success_looks_like": "CodeAI proactively identifies Carmen through data or outreach, contacts her directly before the public announcement, acknowledges her informal contributions, and offers her a clear and expedited path to formal facilitator status. She becomes one of CodeAI's most effective regional ambassadors.",
+    "failure_looks_like": "Carmen receives a generic rebrand email, feels unseen, and continues operating in isolation without formal support. The rebrand increases teacher anxiety in her district, making her informal work harder. She eventually burns out or redirects her energy to a different organization that recognizes her.",
+    "aim_feeling": "Found, recognized, and formally welcomed. She should feel like CodeAI has been looking for someone exactly like her.",
+    "comms_in_control": [
+      "Proactive direct outreach to informal ambassadors identified through usage data",
+      "Personalized acknowledgment of her informal contributions",
+      "Facilitator pathway information and expedited application process",
+      "Full curriculum toolkit access with proper permissions",
+      "Invitation to a community of district-level instructional technology leaders",
+      "Resources specifically designed to help her manage teacher anxiety around AI"
+    ],
+    "comms_out_of_control": [
+      "Her assistant superintendent's reaction to the rebrand",
+      "Teacher community sentiment within her district",
+      "Local education media and district communications",
+      "Peer instructional technology specialist networks and social media"
+    ]
+  },
+  {
+    "name": "James Okafor",
+    "role": "Regional Partner Director",
+    "grade_band": "Regional Partner",
+    "relationship": "Active Partner",
+    "motivation": "Mission-driven",
+    "current_course": "Facilitating CS Principles and CS Discoveries summer workshops; 6 workshops already advertised and enrolled for summer 2026 under the Code.org name",
+    "goals": [
+      "Maintain and grow his organization's credibility as the go-to CS PD provider in the state",
+      "Ensure his facilitators are confident and well-equipped heading into the summer",
+      "Protect the enrollment and reputation of workshops already in market",
+      "Maintain a strong relationship with CodeAI as a strategic partner, not just a content licensee"
+    ],
+    "pain_points": [
+      "Has 6 workshops already advertised under the Code.org brand — needs time and guidance to update marketing materials before summer",
+      "His facilitators have not been told about the rebrand yet; he needs to brief them before they hear it elsewhere",
+      "His university partners and state education contacts will ask him questions he won't be able to answer if not briefed early",
+      "Relies partially on CodeAI subsidy and is uncertain whether funding structures are changing with the rebrand"
+    ],
+    "ai_relationship": "Engaged and constructively critical. He believes in the AI + CS direction but has real questions about how it will be taught at scale by teachers who are already overwhelmed.",
+    "rebrand_risk": "He learns about the rebrand the same day as the public announcement. He is blindsided. His facilitators and university partners see the news before he has a chance to contextualize it. His credibility as a partner takes a hit.",
+    "needs": [
+      "Early, exclusive briefing — well ahead of public announcement",
+      "Clear guidance on workshop re-marketing with enough lead time to act",
+      "A facilitator communication plan he can deliver through his own channels",
+      "Honest answers about funding and subsidy continuity",
+      "An invitation to contribute his field knowledge to the AI + CS direction"
+    ],
+    "quote": "I need to be the person who explains this to my team — not the person who finds out at the same time they do.",
+    "background": "James runs the CS education outreach division of a state university's college of education in North Carolina. His organization has been a CodeAI regional partner for 8 years, delivering summer professional development workshops for middle and high school teachers across the state. He has 12 facilitators on his roster, manages a team of 4 staff, and operates on a combination of CodeAI subsidy, university support, and grant funding. 46 years old, 19 years in education and nonprofit leadership.",
+    "excited_about": "The AI + CS direction if he believes it's well-founded; the opportunity to be a strategic partner in shaping how the rebrand lands in his state; new curriculum and materials that give his facilitators something compelling to deliver this summer.",
+    "nervous_about": "Being blindsided and losing credibility with his team and university partners; the concrete operational burden of rebranding 6 live workshops; funding uncertainty; his facilitators hearing about the rebrand before he does.",
+    "success_looks_like": "James receives an exclusive pre-briefing weeks before the public announcement, gets a clear re-marketing guide and timeline, has a facilitator communication plan he can own and deliver, and receives clear written answers on funding continuity. He walks into his next facilitator meeting as the informed, confident leader his team expects.",
+    "failure_looks_like": "James reads about the rebrand in a press release the same day as everyone else. His facilitators find out through social media. His university partners call him with questions he can't answer. His credibility takes a significant hit and the relationship with CodeAI is strained heading into the most critical delivery season of the year.",
+    "aim_feeling": "Trusted, respected, and genuinely included. He should feel like a senior partner who was brought into the room early — not managed from a distance.",
+    "comms_in_control": [
+      "Exclusive pre-briefing session with CodeAI leadership well ahead of public announcement",
+      "Workshop re-marketing guide with timeline and templates",
+      "Facilitator communication plan and talking points he can deliver through his own channels",
+      "Written documentation on funding and subsidy continuity",
+      "Direct contact at CodeAI for ongoing questions during the transition",
+      "Invitation to contribute field insights to AI + CS curriculum direction"
+    ],
+    "comms_out_of_control": [
+      "National press and education media coverage of the rebrand",
+      "University administration and state education department reactions",
+      "Facilitator social media and peer networks",
+      "Workshop registrant reactions to the name change",
+      "State-level education policy communications"
+    ]
+  },
+  {
+    "name": "Rosa Mendez",
+    "role": "Veteran Facilitator",
+    "grade_band": "Facilitator",
+    "relationship": "Active Facilitator",
+    "motivation": "Deep Early Adopter",
+    "current_course": "CS Discoveries and CS Principles summer workshop facilitation (3 workshops scheduled for summer 2026)",
+    "goals": [
+      "Continue to be a credible, inspiring presence in the room for teachers who are scared or skeptical",
+      "Understand the AI + CS direction well enough to answer the hard questions teachers are already raising",
+      "Stay connected to a community that has defined her professional identity for a decade"
+    ],
+    "pain_points": [
+      "The TeacherCon era is over and she misses it — the organizational community that defined her early years has slowly dissolved",
+      "Already hearing from teachers: 'If AI can just write the code, why are we teaching coding?' and she doesn't yet have a confident answer",
+      "Contracts through a regional partner and has no direct communication channel with CodeAI — often hears news late or secondhand",
+      "Worried the rebrand signals that the 'teaching humans' part of the mission is being deprioritized in favor of AI tools"
+    ],
+    "ai_relationship": "Thoughtful and somewhat protective. She loves CS for what it does for students' minds and agency. She wants to believe AI + CS is additive — but she needs to be convinced, not told.",
+    "rebrand_risk": "She walks into a summer workshop with teachers who have already seen the CodeAI rebrand online. She doesn't have the language to address it. She loses the room's confidence in the first 10 minutes.",
+    "needs": [
+      "A dedicated facilitator briefing — not a generic email, but a real conversation",
+      "Compelling, honest answers to the hardest teacher questions, especially 'why code if AI can do it?'",
+      "Language that honors the CS foundation while making the AI direction feel purposeful",
+      "A signal that the people who built this movement through human relationships still matter"
+    ],
+    "quote": "I can sell anything I believe in. But I need to believe in it first. Give me the real story and I'll take it anywhere.",
+    "background": "Rosa left the classroom four years ago to become a full-time facilitator for a CodeAI regional partner in the Southwest. She has facilitated CS Discoveries and CS Principles summer workshops for six consecutive years and has trained over 400 teachers. She attended TeacherCon twice in the early days and describes it as 'the most professionally formative experience of my career.' She is a legend within her regional network. 49 years old, 21 years in education, formerly an 8th grade CS teacher in New Mexico.",
+    "excited_about": "The possibility of a new chapter that re-energizes the community and gives her something genuinely compelling to bring to teachers; clear, honest answers to the hardest questions that will make her more effective in the room; recognition of the human, relational work she has done for a decade.",
+    "nervous_about": "Walking into a summer workshop without the language to address teacher questions about the rebrand; the sense that the community and human connection of the early days are being replaced by technology and brand strategy; that the 'teaching humans' mission is being subordinated to AI positioning.",
+    "success_looks_like": "Rosa receives a dedicated, live facilitator briefing well before summer workshops begin. She engages in a real conversation about the AI + CS direction, asks the hard questions, and gets genuine answers. She walks into her first summer workshop fully equipped — and delivers the rebrand narrative with the same conviction she brings to everything else.",
+    "failure_looks_like": "Rosa receives a generic email about the rebrand. She shows up to a workshop unprepared for teacher questions about the name change, loses the room's confidence, and starts to feel like CodeAI no longer values the human facilitation work that has defined her career. She begins to disengage from the network.",
+    "aim_feeling": "Reconvicted and re-energized. She should feel like this new chapter was built with people like her in mind — and that her voice and her relationships are more important than ever.",
+    "comms_in_control": [
+      "Dedicated live facilitator briefing session — not an email",
+      "Honest, deep-dive Q&A on the AI + CS direction",
+      "Facilitator-specific messaging guide with answers to hardest teacher questions",
+      "Language toolkit that honors CS foundation while embracing AI direction",
+      "Community re-engagement moment — even a virtual one — that echoes the spirit of TeacherCon",
+      "Direct acknowledgment of her tenure and contributions from CodeAI leadership"
+    ],
+    "comms_out_of_control": [
+      "Teacher social media and peer networks sharing rebrand news before workshops",
+      "Regional partner's own communication to facilitators",
+      "Education press coverage that frames the rebrand in ways she can't control",
+      "Teacher community sentiment heading into summer PD season"
+    ]
+  },
+  {
+    "name": "Marcus Bell",
+    "role": "High School Guidance Counselor",
+    "grade_band": "School",
+    "relationship": "Peripheral",
+    "motivation": "Neutral",
+    "current_course": "Influencing enrollment in CS Principles (indirectly — does not teach the course)",
+    "goals": [
+      "Help every student build a schedule that serves their individual goals and college trajectory",
+      "Stay current enough on emerging workforce trends to give credible advice",
+      "Reduce the number of students who feel lost or underprepared when they leave his building"
+    ],
+    "pain_points": [
+      "Has no compelling answer when a student asks 'why would I take CS instead of another elective?'",
+      "Gets almost no communication from curriculum vendors — the CS teacher does, but it doesn't flow to him",
+      "AI is a topic that comes up constantly in college counseling conversations now, and he doesn't have a confident framework for it",
+      "The name 'CodeAI' might trigger the same parent concerns about AI that he's been fielding in college advising conversations"
+    ],
+    "ai_relationship": "Curious but uninformed. He sees AI as important for students' futures but doesn't have the vocabulary or framework to talk about it with confidence.",
+    "rebrand_risk": "A student or parent asks him about the school's 'CodeAI' course. He draws a blank, refers them to the CS teacher, and misses an enrollment opportunity entirely.",
+    "needs": [
+      "A one-page, plain-language explainer: what is CodeAI, what will students be able to do after taking it, and why does it matter for any student — not just those going into tech",
+      "Something he can confidently hand to a parent",
+      "A connection to the CS teacher that positions them as a team",
+      "A compelling answer to 'why does this matter for a kid who wants to be a nurse or journalist?'"
+    ],
+    "quote": "If you can help me explain why this matters to a kid who wants to be a nurse or a journalist, I will put more students in that class.",
+    "background": "Marcus manages course selection for approximately 320 juniors and seniors at a diverse suburban high school in Maryland. He is aware that CS courses exist at his school — there are two sections of CS Principles — but has historically steered only students who expressed interest in tech toward them. He has a vague familiarity with Code.org from a faculty meeting two years ago but has not engaged directly with the curriculum or the platform. 43 years old, 16 years as a counselor.",
+    "excited_about": "A clear, non-technical explanation of why CS and AI matter for every student regardless of career path — this is the missing tool that could immediately change how he advises students on course selection.",
+    "nervous_about": "Parent concerns about 'AI' in the course name coming through his office; being caught without a clear answer when a student or parent asks about the rebrand; the possibility that 'CodeAI' sounds more intimidating or technical than it used to.",
+    "success_looks_like": "Marcus has a simple, jargon-free one-pager in his drawer before the rebrand goes live. When a student asks if they should take the CS course, he has a compelling, universal answer ready. Enrollment in CS Principles increases because he's actively recommending it.",
+    "failure_looks_like": "Marcus encounters the 'CodeAI' name from a student or parent, has no context, refers them elsewhere, and continues to deprioritize CS course recommendations. The CS teacher remains isolated and enrollment stays flat.",
+    "aim_feeling": "Confident and equipped. He should feel like CodeAI handed him exactly what he needed to do his job better — with no extra work required on his end.",
+    "comms_in_control": [
+      "Counselor-specific one-pager on CodeAI: what it is, what students learn, why it matters for all career paths",
+      "Parent-facing FAQ he can print or share",
+      "Suggested talking points for student advising conversations",
+      "Communication that flows through or coordinates with the CS teacher to build a team dynamic",
+      "Connection to workforce and college readiness data that supports CS + AI as a universal skill"
+    ],
+    "comms_out_of_control": [
+      "Student and parent word-of-mouth about the rebrand",
+      "College admissions trends and counselor peer networks",
+      "Local news coverage of the rebrand",
+      "The CS teacher's own communication about the course and the rebrand"
+    ]
+  },
+  {
+    "name": "Aiden Park",
+    "role": "Prospective Teacher",
+    "grade_band": "9-12",
+    "relationship": "None",
+    "motivation": "Self-directed",
+    "current_course": "Pre-service teacher candidate — graduating June 2026; no active course yet",
+    "goals": [
+      "Enter the classroom with relevant, current skills that make him an effective and credible educator",
+      "Understand how to teach students to use AI responsibly and with depth — not just as a shortcut",
+      "Build a professional identity that bridges his comfort with technology and his new teaching role",
+      "Find curriculum resources that meet students where they actually are in their relationship with AI"
+    ],
+    "pain_points": [
+      "Has used AI extensively but has almost no formal education in how it actually works — high use, low depth",
+      "Entering a profession that is still figuring out what to do about AI; limited mentorship or guidance on how to address it in the classroom",
+      "Uncertain which curriculum resources are credible versus overhyped in a noisy AI education landscape",
+      "May not know CodeAI exists yet — discovery and conversion are the primary challenges"
+    ],
+    "ai_relationship": "High use, low depth. He is a textbook example of the AI Fluency Gap — uses AI tools constantly but has had almost no formal instruction in the underlying computer science. He represents the exact student population CodeAI is trying to reach, now entering the workforce as a teacher.",
+    "rebrand_risk": "As a prospective teacher with no prior relationship to Code.org, Aiden may discover CodeAI for the first time through the rebrand campaign — but without a clear, frictionless entry point, the moment of discovery may not convert to action.",
+    "needs": [
+      "A clear, frictionless entry point from first discovery of CodeAI to first meaningful action",
+      "Messaging that speaks to someone who is tech-comfortable but AI-uneducated — who knows the gap exists and wants to close it",
+      "Resources that help him go from AI user to AI educator quickly and credibly",
+      "A community or network of new and early-career CS teachers he can learn alongside",
+      "Concrete, actionable next steps — what to explore, what to sign up for, what to teach first"
+    ],
+    "quote": "I've been using AI for everything since high school. I just realized I have no idea how it actually works — and I'm about to be the person teaching it.",
+    "background": "Aiden is a 34-year-old pre-service teacher candidate in Washington State, graduating in June 2026 with a teaching credential. He grew up using technology fluently and adopted AI tools early and enthusiastically. He represents the 86% of students who have used AI heavily with little to no formal instruction in the underlying computer science — and is now entering the classroom as that gap becomes professionally visible. He is self-directed and motivated, but has no prior relationship with CodeAI and may not yet know the organization exists.",
+    "excited_about": "A curriculum and organization that takes AI seriously and gives him a structured, rigorous framework to teach it — something that matches the urgency he personally feels about AI's role in education and his students' futures.",
+    "nervous_about": "Entering the classroom without adequate preparation to address AI questions from students; choosing the wrong curriculum resource in a crowded and confusing landscape; being seen as unprepared or behind on something he's assumed to be tech-forward on.",
+    "success_looks_like": "Aiden discovers CodeAI through the rebrand campaign, immediately finds a clear and relevant entry point, completes an initial module or course exploration, and signs up for summer PD. He enters his first classroom in fall 2026 with a CodeAI curriculum plan in hand.",
+    "failure_looks_like": "Aiden encounters CodeAI's rebrand moment but finds the entry point unclear or the messaging too broad. He moves on to a competing resource that feels more immediately actionable. CodeAI misses the opportunity to capture a new generation of early-career CS educators at their moment of highest openness.",
+    "aim_feeling": "Equipped and energized. He should feel like CodeAI was built for exactly the moment he's in — and that the path forward is clear and achievable.",
+    "comms_in_control": [
+      "Rebrand campaign content targeted at prospective and early-career teachers",
+      "Clear, low-friction landing page for new teacher discovery and sign-up",
+      "Student Voice and graduation campaign content shareable on social platforms",
+      "Summer PD registration pathway promoted through teacher prep programs and education schools",
+      "Early-career teacher community or cohort invitation",
+      "New teacher starter guide or onboarding sequence"
+    ],
+    "comms_out_of_control": [
+      "Teacher preparation program recommendations and curriculum choices",
+      "Education school faculty and advisor word-of-mouth",
+      "Peer networks among graduating teacher candidates",
+      "Social media algorithm and organic discovery",
+      "Competing curriculum vendor outreach to new teachers"
+    ]
+  }
+]

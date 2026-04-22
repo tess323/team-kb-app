@@ -1,4 +1,6 @@
 import { createClient } from "@libsql/client";
+import { readFileSync } from "fs";
+import { resolve } from "path";
 
 const db = createClient({ url: "file:/tmp/conversations.db" });
 
@@ -49,6 +51,44 @@ async function setup() {
     } catch {
       // column already exists
     }
+  }
+  await seedPersonas();
+}
+
+async function seedPersonas() {
+  const { rows } = await db.execute(
+    "SELECT COUNT(*) as count FROM personas WHERE name IS NOT NULL"
+  );
+  if ((rows[0].count as number) > 0) return;
+
+  const seedPath = resolve(process.cwd(), "data/personas-seed.json");
+  let seed: Record<string, unknown>[];
+  try {
+    seed = JSON.parse(readFileSync(seedPath, "utf-8"));
+  } catch {
+    return;
+  }
+
+  const serial = (v: unknown) => (Array.isArray(v) ? JSON.stringify(v) : null);
+
+  for (const p of seed) {
+    await db.execute({
+      sql: `INSERT INTO personas (name, role, grade_band, relationship, motivation, current_course,
+        goals, pain_points, ai_relationship, rebrand_risk, needs, quote, background, excited_about,
+        nervous_about, success_looks_like, failure_looks_like, aim_feeling,
+        comms_in_control, comms_out_of_control, content)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      args: [
+        p.name as string, p.role as string, p.grade_band as string,
+        p.relationship as string, p.motivation as string, p.current_course as string,
+        serial(p.goals), serial(p.pain_points), p.ai_relationship as string,
+        p.rebrand_risk as string, serial(p.needs), p.quote as string,
+        p.background as string, p.excited_about as string, p.nervous_about as string,
+        p.success_looks_like as string, p.failure_looks_like as string,
+        p.aim_feeling as string, serial(p.comms_in_control),
+        serial(p.comms_out_of_control), null,
+      ],
+    });
   }
 }
 
