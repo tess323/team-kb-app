@@ -1,14 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
-import { personas } from "@/src/data/personas";
+import { getPersonaById, updatePersonaDocId, type PersonaRow } from "@/lib/db";
 import { createPersonaDoc } from "@/lib/gdrive";
-import { updatePersonaDocId } from "@/lib/db";
 
 export async function POST(req: NextRequest) {
   const { personaId } = await req.json();
   const id = Number(personaId);
 
-  const persona = personas.find((p) => p.id === id);
-  if (!persona) {
+  const persona = await getPersonaById(id);
+  if (!persona || !persona.name) {
     return NextResponse.json({ error: "Persona not found" }, { status: 404 });
   }
 
@@ -28,49 +27,42 @@ export async function POST(req: NextRequest) {
   return NextResponse.json({ docId: result.docId, docUrl: result.docUrl });
 }
 
-function formatPersonaAsDoc(persona: (typeof personas)[number]): string {
+function bullets(items: string[] | null): string[] {
+  return items?.map((i) => `  • ${i}`) ?? [];
+}
+
+function formatPersonaAsDoc(p: PersonaRow): string {
   const lines: string[] = [
-    `${persona.name}`,
-    `${persona.role}`,
-    `Grade band: ${persona.gradeBand}  |  Relationship: ${persona.relationshipStatus}  |  Motivation: ${persona.motivationSpectrum} (${persona.motivationScore}/100)`,
+    p.name ?? "",
+    p.role ?? "",
+    [p.grade_band, p.relationship, p.motivation, p.current_course]
+      .filter(Boolean)
+      .join("  |  "),
     "",
-    "BACKGROUND",
-    persona.background,
-    "",
-    "WHAT THIS SHOULD FEEL LIKE",
-    persona.feelLike,
-    "",
-    "EXCITED ABOUT",
-    persona.excited,
-    "",
-    "NERVOUS ABOUT",
-    persona.nervous,
-    "",
-    "SUCCESS LOOKS LIKE",
-    persona.successLooks,
-    "",
-    "FAILURE LOOKS LIKE",
-    persona.failureLooks,
-    "",
-    "COMMUNICATION CHANNELS",
-    "Within our control:",
-    ...persona.channelsWithinControl.map((c) => `  • ${c}`),
-    "Outside our control:",
-    ...persona.channelsOutsideControl.map((c) => `  • ${c}`),
-    "",
-    "JOURNEY",
-    "",
-    "Pre-launch:",
-    ...persona.journey.preLaunch.moments.map((m) => `  • ${m}`),
-    "",
-    "Launch:",
-    ...persona.journey.launch.moments.map((m) => `  • ${m}`),
-    "",
-    "Summer:",
-    ...persona.journey.summer.moments.map((m) => `  • ${m}`),
-    "",
-    "Back to school:",
-    ...persona.journey.backToSchool.moments.map((m) => `  • ${m}`),
   ];
+
+  if (p.quote) lines.push(`"${p.quote}"`, "");
+  if (p.background) lines.push("BACKGROUND", p.background, "");
+  if (p.goals?.length) lines.push("GOALS", ...bullets(p.goals), "");
+  if (p.pain_points?.length) lines.push("PAIN POINTS", ...bullets(p.pain_points), "");
+  if (p.needs?.length) lines.push("NEEDS", ...bullets(p.needs), "");
+  if (p.excited_about) lines.push("EXCITED ABOUT", p.excited_about, "");
+  if (p.nervous_about) lines.push("NERVOUS ABOUT", p.nervous_about, "");
+  if (p.success_looks_like) lines.push("SUCCESS LOOKS LIKE", p.success_looks_like, "");
+  if (p.failure_looks_like) lines.push("FAILURE LOOKS LIKE", p.failure_looks_like, "");
+  if (p.aim_feeling) lines.push("HOW WE WANT THEM TO FEEL", p.aim_feeling, "");
+  if (p.ai_relationship) lines.push("AI RELATIONSHIP", p.ai_relationship, "");
+  if (p.rebrand_risk) lines.push("REBRAND RISK", p.rebrand_risk, "");
+
+  if (p.comms_in_control?.length || p.comms_out_of_control?.length) {
+    lines.push("COMMUNICATION CHANNELS", "");
+    if (p.comms_in_control?.length) {
+      lines.push("Within our control:", ...bullets(p.comms_in_control), "");
+    }
+    if (p.comms_out_of_control?.length) {
+      lines.push("Outside our control:", ...bullets(p.comms_out_of_control), "");
+    }
+  }
+
   return lines.join("\n");
 }
