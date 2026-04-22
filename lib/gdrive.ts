@@ -16,17 +16,41 @@ function getAuth() {
   return auth;
 }
 
+async function fetchSheetContent(spreadsheetId: string, tabName: string): Promise<string> {
+  const auth = getAuth();
+  const sheets = google.sheets({ version: "v4", auth });
+
+  const res = await sheets.spreadsheets.values.get({
+    spreadsheetId,
+    range: tabName,
+  });
+
+  const rows = res.data.values;
+  if (!rows || rows.length === 0) return "";
+
+  const [headers, ...body] = rows;
+  const headerRow = `| ${headers.join(" | ")} |`;
+  const divider   = `| ${headers.map(() => "---").join(" | ")} |`;
+  const dataRows  = body.map((row) => {
+    const cells = headers.map((_, i) => (row[i] ?? "").toString().replace(/\n/g, " "));
+    return `| ${cells.join(" | ")} |`;
+  });
+
+  return `--- Sheet: ${tabName} ---\n${[headerRow, divider, ...dataRows].join("\n")}`;
+}
+
 export async function fetchKnowledgeBase(): Promise<string> {
   const rawIds = process.env.KB_DOC_IDS ?? "";
   const ids = rawIds.split(",").map((id) => id.trim()).filter(Boolean);
 
-  if (ids.length === 0) return "";
+  const rawRanges = process.env.KB_SHEET_RANGES ?? "";
+  const ranges = rawRanges.split(",").map((r) => r.trim()).filter(Boolean);
 
   const auth = getAuth();
   const docsApi = google.docs({ version: "v1", auth });
   const slidesApi = google.slides({ version: "v1", auth });
 
-  const pages = await Promise.all(
+  const docSections = await Promise.all(
     ids.map(async (id) => {
       try {
         const res = await docsApi.documents.get({ documentId: id });
@@ -38,7 +62,22 @@ export async function fetchKnowledgeBase(): Promise<string> {
     })
   );
 
-  return pages.join("\n\n---\n\n");
+  const sheetSections = await Promise.all(
+    ranges.map(async (range) => {
+      const colonIdx = range.indexOf(":");
+      if (colonIdx === -1) return "";
+      const spreadsheetId = range.slice(0, colonIdx).trim();
+      const tabName = range.slice(colonIdx + 1).trim();
+      try {
+        return await fetchSheetContent(spreadsheetId, tabName);
+      } catch (err) {
+        console.error(`[gdrive] failed to fetch sheet ${range}:`, err);
+        return "";
+      }
+    })
+  );
+
+  return [...docSections, ...sheetSections].filter(Boolean).join("\n\n---\n\n");
 }
 
 function extractDocText(doc: docs_v1.Schema$Document): string {
