@@ -107,3 +107,40 @@ function extractSlidesText(presentation: slides_v1.Schema$Presentation): string 
   }
   return parts.join("");
 }
+
+export async function fetchPersonaDoc(docId: string): Promise<string> {
+  const auth = getAuth();
+  const docsApi = google.docs({ version: "v1", auth });
+  const res = await docsApi.documents.get({ documentId: docId });
+  return extractDocText(res.data);
+}
+
+export async function createPersonaDoc(
+  title: string,
+  content: string
+): Promise<{ docId: string; docUrl: string }> {
+  const auth = getAuth();
+  const docsApi = google.docs({ version: "v1", auth });
+
+  const created = await docsApi.documents.create({ requestBody: { title } });
+  const docId = created.data.documentId!;
+
+  await docsApi.documents.batchUpdate({
+    documentId: docId,
+    requestBody: {
+      requests: [
+        {
+          insertText: {
+            location: { index: 1 },
+            text: content,
+          },
+        },
+      ],
+    },
+  });
+
+  return {
+    docId,
+    docUrl: `https://docs.google.com/document/d/${docId}/edit`,
+  };
+}

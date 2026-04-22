@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
 import { fetchKnowledgeBase } from "@/lib/gdrive";
-import { saveConversation } from "@/lib/db";
+import { saveConversation, getPersonaById } from "@/lib/db";
+import { personas } from "@/src/data/personas";
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
@@ -24,8 +25,29 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Failed to fetch knowledge base", detail: message }, { status: 500 });
   }
 
+  const lastUserMessage = messages[messages.length - 1].content.toLowerCase();
+  const mentionedPersonas = personas.filter((p) =>
+    lastUserMessage.includes(p.name.toLowerCase()) ||
+    lastUserMessage.includes(p.name.split(" ")[0].toLowerCase())
+  );
+
+  let personaContext = "";
+  if (mentionedPersonas.length > 0) {
+    const docSnippets = await Promise.all(
+      mentionedPersonas.map(async (p) => {
+        const record = await getPersonaById(p.id);
+        if (!record?.google_doc_id || !record.synced_content) return null;
+        return `<persona name="${p.name}">\n${record.synced_content}\n</persona>`;
+      })
+    );
+    const valid = docSnippets.filter(Boolean);
+    if (valid.length > 0) {
+      personaContext = `\n\n<persona_docs>\n${valid.join("\n\n")}\n</persona_docs>`;
+    }
+  }
+
   const systemPrompt = context
-    ? `You are a helpful assistant with access to the team knowledge base. Use the following documents to answer questions accurately.\n\n<knowledge_base>\n${context}\n</knowledge_base>`
+    ? `You are a helpful assistant with access to the team knowledge base. Use the following documents to answer questions accurately.\n\n<knowledge_base>\n${context}\n</knowledge_base>${personaContext}`
     : "You are a helpful assistant.";
 
   const stream = client.messages.stream({

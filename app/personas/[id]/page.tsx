@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { personas } from "@/src/data/personas";
+import { getPersonaById } from "@/lib/db";
+import PersonaDocActions from "./PersonaDocActions";
 
 export default async function PersonaDetailPage({
   params,
@@ -8,8 +10,11 @@ export default async function PersonaDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const persona = personas.find((p) => p.id === Number(id));
+  const numericId = Number(id);
+  const persona = personas.find((p) => p.id === numericId);
   if (!persona) notFound();
+
+  const dbRecord = await getPersonaById(numericId);
 
   const {
     name, role, initials, gradeBand, relationshipStatus, motivationSpectrum,
@@ -28,19 +33,27 @@ export default async function PersonaDetailPage({
       </Link>
 
       {/* Header */}
-      <div className="flex items-center gap-4 mb-8">
-        <div className="w-14 h-14 rounded-md bg-hunter flex items-center justify-center text-cream font-semibold text-lg shrink-0">
-          {initials}
-        </div>
-        <div>
-          <h1 className="text-4xl font-sans font-semibold tracking-tight text-ink leading-tight">{name}</h1>
-          <p className="text-sm text-ink/50 mt-1">{role}</p>
-          <div className="flex gap-2 mt-2">
-            <HeaderPill>{gradeBand}</HeaderPill>
-            <HeaderPill>{relationshipStatus}</HeaderPill>
-            <HeaderPill>{motivationSpectrum}</HeaderPill>
+      <div className="flex items-start justify-between gap-4 mb-8">
+        <div className="flex items-center gap-4">
+          <div className="w-14 h-14 rounded-md bg-hunter flex items-center justify-center text-cream font-semibold text-lg shrink-0">
+            {initials}
+          </div>
+          <div>
+            <h1 className="text-4xl font-sans font-semibold tracking-tight text-ink leading-tight">{name}</h1>
+            <p className="text-sm text-ink/50 mt-1">{role}</p>
+            <div className="flex gap-2 mt-2">
+              <HeaderPill>{gradeBand}</HeaderPill>
+              <HeaderPill>{relationshipStatus}</HeaderPill>
+              <HeaderPill>{motivationSpectrum}</HeaderPill>
+            </div>
           </div>
         </div>
+        <PersonaDocActions
+          personaId={numericId}
+          initialDocId={dbRecord?.google_doc_id ?? null}
+          initialDocUrl={dbRecord?.google_doc_id ? `https://docs.google.com/document/d/${dbRecord.google_doc_id}/edit` : null}
+          initialLastSynced={dbRecord?.last_synced ?? null}
+        />
       </div>
 
       {/* Bento grid */}
