@@ -5,6 +5,7 @@ import { fetchKnowledgeBase } from "@/lib/gdrive";
 export const maxDuration = 300;
 import {
   getPersonaById,
+  savePersonaTimeline,
   saveTimelineDraft,
   commitTimelineChanges,
   dismissTimelineGap,
@@ -118,6 +119,13 @@ export async function POST(
   const { id } = await params;
   const personaId = Number(id);
   const body = await req.json();
+
+  // ── save-edits ───────────────────────────────────────────────────────────────
+  if (body.action === "save-edits") {
+    if (!body.timeline_data) return NextResponse.json({ error: "No timeline_data" }, { status: 400 });
+    await savePersonaTimeline(personaId, body.timeline_data);
+    return NextResponse.json({ ok: true });
+  }
 
   // ── dismiss-gap ─────────────────────────────────────────────────────────────
   if (body.action === "dismiss-gap") {

@@ -4,6 +4,7 @@ import { useState, useEffect, useMemo } from "react";
 import {
   sortPhases,
   compareTimelines,
+  setByPath,
   type TimelinePhase,
   type TimelineEvent,
   type DiffItem,
@@ -207,6 +208,8 @@ function PhaseDetail({
   diffs,
   decisions,
   onDecide,
+  isEditMode,
+  onFieldChange,
 }: {
   phaseIndex: number;
   phase: TimelinePhase;
@@ -218,9 +221,42 @@ function PhaseDetail({
   diffs: DiffItem[];
   decisions: Record<string, "accepted" | "rejected">;
   onDecide: (path: string, d: "accepted" | "rejected") => void;
+  isEditMode: boolean;
+  onFieldChange: (path: string, value: string) => void;
 }) {
   const prefix = `phases[${phaseIndex}]`;
   const isReview = diffs.length > 0;
+
+  function EditableField({
+    path,
+    value,
+    multiline,
+    className,
+  }: {
+    path: string;
+    value: string | null;
+    multiline?: boolean;
+    className?: string;
+  }) {
+    const base = `border border-parchment-dark rounded px-2 py-1 bg-white focus:outline-none focus:border-hunter/50 w-full ${className ?? ""}`;
+    if (multiline) {
+      return (
+        <textarea
+          value={value ?? ""}
+          onChange={(e) => onFieldChange(path, e.target.value)}
+          className={`${base} resize-y`}
+          rows={2}
+        />
+      );
+    }
+    return (
+      <input
+        value={value ?? ""}
+        onChange={(e) => onFieldChange(path, e.target.value)}
+        className={base}
+      />
+    );
+  }
 
   // Safe mindset text accessor (handles old string format in live data)
   const mindsetText =
@@ -270,21 +306,30 @@ function PhaseDetail({
 
           {/* Mindset quote */}
           <div className="flex flex-wrap items-start gap-2">
-            <p className="text-sm italic text-ink/70 leading-relaxed flex-1">
-              {isReview ? (
-                <DiffField
-                  path={`${prefix}.mindset.text`}
-                  value={mindsetText}
-                  diffs={diffs}
-                  decisions={decisions}
-                  onDecide={onDecide}
-                  className="italic"
-                />
-              ) : (
-                mindsetText
-              )}
-            </p>
-            {mindsetCitation && !isReview && (
+            {isEditMode ? (
+              <EditableField
+                path={`${prefix}.mindset.text`}
+                value={mindsetText}
+                multiline
+                className="text-sm italic text-ink/70"
+              />
+            ) : (
+              <p className="text-sm italic text-ink/70 leading-relaxed flex-1">
+                {isReview ? (
+                  <DiffField
+                    path={`${prefix}.mindset.text`}
+                    value={mindsetText}
+                    diffs={diffs}
+                    decisions={decisions}
+                    onDecide={onDecide}
+                    className="italic"
+                  />
+                ) : (
+                  mindsetText
+                )}
+              </p>
+            )}
+            {mindsetCitation && !isReview && !isEditMode && (
               <CitationPill citation={mindsetCitation} context="mindset" onOpen={setKbPanel} />
             )}
           </div>
@@ -310,8 +355,10 @@ function PhaseDetail({
                 <div className="flex-1 min-w-0">
                   {/* Title row */}
                   <div className="flex flex-wrap items-start gap-1.5 mb-1">
-                    <span className="text-sm font-medium text-ink">
-                      {isReview ? (
+                    <span className="text-sm font-medium text-ink flex-1">
+                      {isEditMode ? (
+                        <EditableField path={`${ep}.title`} value={ev.title} className="text-sm font-medium" />
+                      ) : isReview ? (
                         <DiffField
                           path={`${ep}.title`}
                           value={ev.title}
@@ -352,8 +399,10 @@ function PhaseDetail({
                   )}
 
                   {/* Description */}
-                  <p className="text-xs text-ink/60 leading-relaxed mt-1.5">
-                    {isReview ? (
+                  <div className="text-xs text-ink/60 leading-relaxed mt-1.5">
+                    {isEditMode ? (
+                      <EditableField path={`${ep}.description`} value={ev.description} multiline className="text-xs" />
+                    ) : isReview ? (
                       <DiffField
                         path={`${ep}.description`}
                         value={ev.description}
@@ -364,7 +413,7 @@ function PhaseDetail({
                     ) : (
                       ev.description
                     )}
-                  </p>
+                  </div>
                 </div>
               </div>
             );
@@ -416,8 +465,10 @@ function PhaseDetail({
                         New gap identified
                       </p>
                     )}
-                    <p className="text-sm font-medium text-ink mb-0.5">
-                      {isReview && gi >= 0 ? (
+                    <div className="text-sm font-medium text-ink mb-0.5">
+                      {isEditMode && gi >= 0 ? (
+                        <EditableField path={`${gp}.title`} value={gap.title} className="text-sm font-medium" />
+                      ) : isReview && gi >= 0 ? (
                         <DiffField
                           path={`${gp}.title`}
                           value={gap.title}
@@ -429,9 +480,11 @@ function PhaseDetail({
                       ) : (
                         gap.title
                       )}
-                    </p>
-                    <p className="text-xs text-ink/60 leading-relaxed">
-                      {isReview && gi >= 0 ? (
+                    </div>
+                    <div className="text-xs text-ink/60 leading-relaxed">
+                      {isEditMode && gi >= 0 ? (
+                        <EditableField path={`${gp}.description`} value={gap.description} multiline className="text-xs" />
+                      ) : isReview && gi >= 0 ? (
                         <DiffField
                           path={`${gp}.description`}
                           value={gap.description}
@@ -442,7 +495,7 @@ function PhaseDetail({
                       ) : (
                         gap.description
                       )}
-                    </p>
+                    </div>
                     {gap.impact && (
                       <p className="text-xs text-ink/50 italic mt-1 leading-relaxed">
                         Impact: {gap.impact}
@@ -484,6 +537,9 @@ export default function TimelineSection({ personaId }: { personaId: number }) {
   const [kbPanel, setKbPanel] = useState<KBPanelCtx | null>(null);
   const [decisions, setDecisions] = useState<Record<string, "accepted" | "rejected">>({});
   const [committing, setCommitting] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [editedTimeline, setEditedTimeline] = useState<TimelinePhase[] | null>(null);
+  const [saving, setSaving] = useState(false);
 
   const phaseKey = `timeline-phase-${personaId}`;
   const reviewKey = `timeline-review-${personaId}`;
@@ -550,7 +606,8 @@ export default function TimelineSection({ personaId }: { personaId: number }) {
   const isReviewMode = !!draftTimeline;
   const sortedLive = useMemo(() => (liveTimeline ? sortPhases(liveTimeline) : []), [liveTimeline]);
   const sortedDraft = useMemo(() => (draftTimeline ? sortPhases(draftTimeline) : []), [draftTimeline]);
-  const displayTimeline = isReviewMode ? sortedDraft : sortedLive;
+  const sortedEdited = useMemo(() => (editedTimeline ? sortPhases(editedTimeline) : []), [editedTimeline]);
+  const displayTimeline = isReviewMode ? sortedDraft : isEditMode ? sortedEdited : sortedLive;
 
   const diffs: DiffItem[] = useMemo(
     () => (draftTimeline ? compareTimelines(liveTimeline ?? [], draftTimeline) : []),
@@ -669,6 +726,50 @@ export default function TimelineSection({ personaId }: { personaId: number }) {
     setSelectedPhase((prev) => (prev === phase ? null : phase));
   }
 
+  function handleStartEdit() {
+    if (!liveTimeline) return;
+    setEditedTimeline(sortPhases(JSON.parse(JSON.stringify(liveTimeline))));
+    setIsEditMode(true);
+  }
+
+  function handleCancelEdit() {
+    setEditedTimeline(null);
+    setIsEditMode(false);
+  }
+
+  function handleFieldChange(path: string, value: string) {
+    setEditedTimeline((prev) => {
+      if (!prev) return prev;
+      const copy = JSON.parse(JSON.stringify(prev)) as TimelinePhase[];
+      const wrapper = { phases: copy as unknown };
+      setByPath(wrapper as Record<string, unknown>, path, value);
+      return wrapper.phases as TimelinePhase[];
+    });
+  }
+
+  async function handleSave() {
+    if (!editedTimeline) return;
+    setSaving(true);
+    try {
+      const res = await fetch(`/api/personas/${personaId}/timeline`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "save-edits",
+          timeline_data: JSON.stringify(editedTimeline),
+        }),
+      });
+      if (!res.ok) throw new Error("Save failed");
+      setLiveTimeline(editedTimeline);
+      setEditedTimeline(null);
+      setIsEditMode(false);
+    } catch (e) {
+      console.error("[timeline save]", e);
+    } finally {
+      setSaving(false);
+    }
+  }
+
   if (loading) return null;
 
   const currentPhaseIndex = displayTimeline.findIndex((p) => p.phase === selectedPhase);
@@ -707,37 +808,62 @@ export default function TimelineSection({ personaId }: { personaId: number }) {
       <div className="flex items-center justify-between mb-5">
         <p className="text-2xs font-semibold text-ink/50 uppercase tracking-wide">
           Communication Timeline
-          {isReviewMode && (
-            <span className="ml-2 normal-case font-normal text-ochre">· reviewing draft</span>
-          )}
+          {isReviewMode && <span className="ml-2 normal-case font-normal text-ochre">· reviewing draft</span>}
+          {isEditMode && <span className="ml-2 normal-case font-normal text-hunter">· editing</span>}
         </p>
         <div className="flex items-center gap-2">
-          {isReviewMode && (
-            <button
-              onClick={handleCommit}
-              disabled={committing}
-              className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-md bg-hunter text-cream hover:bg-hunter/90 transition-colors disabled:opacity-40"
-            >
-              {committing
-                ? "Committing…"
-                : acceptedPaths.length > 0
-                ? `Commit ${acceptedPaths.length} accepted`
-                : "Commit (no changes)"}
-            </button>
+          {isEditMode ? (
+            <>
+              <button
+                onClick={handleCancelEdit}
+                className="text-xs font-medium px-3 py-1.5 rounded-md border border-parchment-dark text-ink/60 hover:text-ink transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSave}
+                disabled={saving}
+                className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-md bg-hunter text-cream hover:bg-hunter/90 transition-colors disabled:opacity-40"
+              >
+                {saving ? "Saving…" : "Save changes"}
+              </button>
+            </>
+          ) : (
+            <>
+              {isReviewMode && (
+                <button
+                  onClick={handleCommit}
+                  disabled={committing}
+                  className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-md bg-hunter text-cream hover:bg-hunter/90 transition-colors disabled:opacity-40"
+                >
+                  {committing
+                    ? "Committing…"
+                    : acceptedPaths.length > 0
+                    ? `Commit ${acceptedPaths.length} accepted`
+                    : "Commit (no changes)"}
+                </button>
+              )}
+              {!isReviewMode && sortedLive.length > 0 && (
+                <button
+                  onClick={handleStartEdit}
+                  className="text-xs font-medium px-3 py-1.5 rounded-md border border-parchment-dark text-ink/60 hover:text-ink transition-colors"
+                >
+                  Edit
+                </button>
+              )}
+              <button
+                onClick={handleGenerate}
+                disabled={generating}
+                className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-md border border-hunter/30 text-hunter hover:bg-hunter-muted transition-colors disabled:opacity-40"
+              >
+                {generating
+                  ? "Reviewing…"
+                  : sortedLive.length > 0
+                  ? "Regenerate"
+                  : "Generate timeline"}
+              </button>
+            </>
           )}
-          <button
-            onClick={handleGenerate}
-            disabled={generating}
-            className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-md border border-hunter/30 text-hunter hover:bg-hunter-muted transition-colors disabled:opacity-40"
-          >
-            {generating
-              ? "Reviewing…"
-              : isReviewMode
-              ? "Regenerate"
-              : displayTimeline.length > 0
-              ? "Regenerate"
-              : "Generate timeline"}
-          </button>
         </div>
       </div>
 
@@ -826,6 +952,8 @@ export default function TimelineSection({ personaId }: { personaId: number }) {
               diffs={diffs}
               decisions={decisions}
               onDecide={handleDecide}
+              isEditMode={isEditMode}
+              onFieldChange={handleFieldChange}
             />
           )}
         </>
