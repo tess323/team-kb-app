@@ -284,7 +284,7 @@ export default function TimelineSection({ personaId }: { personaId: number }) {
   const currentPhase = timeline?.find((p) => p.phase === selectedPhase);
 
   return (
-    <div className="col-span-3 bg-parchment border border-parchment-dark rounded-md p-6">
+    <div className="bg-parchment border border-parchment-dark rounded-md p-6">
       {/* Header row */}
       <div className="flex items-center justify-between mb-5">
         <p className="text-2xs font-semibold text-ink/50 uppercase tracking-wide">

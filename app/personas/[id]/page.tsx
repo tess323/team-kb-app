@@ -68,7 +68,10 @@ export default async function PersonaDetailPage({
         />
       </div>
 
-      <div className="grid grid-cols-3 gap-4">
+      {/* Communication timeline */}
+      <TimelineSection personaId={persona.persona_id} />
+
+      <div className="grid grid-cols-3 gap-4 mt-4">
 
         {/* Quote */}
         {persona.quote && (
@@ -194,9 +197,6 @@ export default async function PersonaDetailPage({
             </div>
           </div>
         )}
-
-        {/* Communication timeline */}
-        <TimelineSection personaId={persona.persona_id} />
 
       </div>
     </main>
