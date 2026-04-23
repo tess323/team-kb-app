@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
+import { fetchKnowledgeBase } from "@/lib/gdrive";
 
 export const maxDuration = 300;
 import {
@@ -129,26 +130,79 @@ export async function POST(
     const persona = await getPersonaById(personaId);
     if (!persona) return NextResponse.json({ error: "Persona not found" }, { status: 404 });
 
-    const userContent = `${PROMPT}\n\n<persona>\n${formatPersona(persona)}\n</persona>`;
+    const encoder = new TextEncoder();
+    const stream = new TransformStream<Uint8Array, Uint8Array>();
+    const writer = stream.writable.getWriter();
 
-    const message = await client.messages.create({
-      model: "claude-haiku-4-5-20251001",
-      max_tokens: 8096,
-      messages: [{ role: "user", content: userContent }],
-    });
+    (async () => {
+      try {
+        // Heartbeat so Vercel sees an active stream while we fetch KB + call Claude
+        await writer.write(encoder.encode(" "));
 
-    const text = (message.content[0] as { text: string }).text;
-    const match = text.match(/\[[\s\S]*\]/);
-    if (!match) {
-      console.error("[timeline] no JSON array in response:", text.slice(0, 300));
-      return NextResponse.json({ error: "Failed to parse timeline from Claude" }, { status: 500 });
-    }
+        let kb = "";
+        try {
+          kb = await Promise.race([
+            fetchKnowledgeBase(),
+            new Promise<string>((_, reject) =>
+              setTimeout(() => reject(new Error("KB timeout")), 25000)
+            ),
+          ]);
+          // Truncate to keep input tokens reasonable
+          if (kb.length > 40000) kb = kb.slice(0, 40000) + "\n\n[KB truncated]";
+        } catch {
+          // proceed without KB
+        }
 
-    await saveTimelineDraft(personaId, match[0]);
+        await writer.write(encoder.encode(" "));
 
-    return NextResponse.json({
-      timeline_draft: match[0],
-      timeline_draft_created_at: new Date().toISOString(),
+        const userContent = `${PROMPT}\n\n<persona>\n${formatPersona(persona)}\n</persona>${kb ? `\n\n<knowledge_base>\n${kb}\n</knowledge_base>` : ""}`;
+
+        let fullText = "";
+        const claudeStream = client.messages.stream({
+          model: "claude-haiku-4-5-20251001",
+          max_tokens: 8096,
+          messages: [{ role: "user", content: userContent }],
+        });
+
+        for await (const chunk of claudeStream) {
+          if (
+            chunk.type === "content_block_delta" &&
+            chunk.delta.type === "text_delta"
+          ) {
+            fullText += chunk.delta.text;
+            await writer.write(encoder.encode(" "));
+          }
+        }
+
+        const match = fullText.match(/\[[\s\S]*\]/);
+        if (!match) {
+          console.error("[timeline] no JSON array in response:", fullText.slice(0, 300));
+          await writer.write(
+            encoder.encode(JSON.stringify({ error: "Failed to parse timeline from Claude" }))
+          );
+        } else {
+          await saveTimelineDraft(personaId, match[0]);
+          await writer.write(
+            encoder.encode(
+              JSON.stringify({
+                timeline_draft: match[0],
+                timeline_draft_created_at: new Date().toISOString(),
+              })
+            )
+          );
+        }
+      } catch (err) {
+        console.error("[timeline] generate error:", err);
+        try {
+          await writer.write(encoder.encode(JSON.stringify({ error: String(err) })));
+        } catch { /* ignore */ }
+      } finally {
+        await writer.close();
+      }
+    })();
+
+    return new Response(stream.readable, {
+      headers: { "Content-Type": "text/plain; charset=utf-8" },
     });
   }
 
