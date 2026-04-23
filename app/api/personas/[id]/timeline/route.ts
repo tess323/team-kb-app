@@ -8,7 +8,6 @@ import {
   commitTimelineChanges,
   dismissTimelineGap,
 } from "@/lib/db";
-import { fetchKnowledgeBase } from "@/lib/gdrive";
 import {
   sortPhases,
   getByPath,
@@ -137,15 +136,7 @@ export async function POST(
     const persona = await getPersonaById(personaId);
     if (!persona) return NextResponse.json({ error: "Persona not found" }, { status: 404 });
 
-    let kb = "";
-    try {
-      kb = await Promise.race([
-        fetchKnowledgeBase(),
-        new Promise<string>((_, reject) => setTimeout(() => reject(new Error("KB timeout")), 20000)),
-      ]);
-    } catch { /* proceed without KB */ }
-
-    const userContent = `${PROMPT}\n\n<persona>\n${formatPersona(persona)}\n</persona>\n\n<knowledge_base>\n${kb}\n</knowledge_base>`;
+    const userContent = `${PROMPT}\n\n<persona>\n${formatPersona(persona)}\n</persona>`;
 
     const message = await client.messages.create({
       model: "claude-sonnet-4-6",
