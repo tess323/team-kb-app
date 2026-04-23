@@ -17,58 +17,51 @@ import {
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
-const PROMPT = `You are generating a communication timeline for a persona in a rebrand campaign.
+const PROMPT = `Generate a communication timeline for a persona in a rebrand campaign across 5 phases: before_launch, launch, summer, end_of_summer, back_to_school.
 
-Using the persona details and knowledge base documents provided, generate a timeline across 5 phases: before_launch, launch, summer, end_of_summer, back_to_school.
+Cite every event, date, and mindset using one of:
+- "sourced": from a specific document
+- "inferred": reasoned from context
+- "gap": needed but unavailable
 
-IMPORTANT: For every event, date, and mindset quote you generate, you must cite where it came from. Use these citation types:
-- sourced: directly found in a specific document (provide doc title and tab if a sheet)
-- inferred: synthesized from multiple documents or reasoned from context
-- gap: information needed but not found in any document
+STRICT LIMITS to keep output concise:
+- Max 3 events per phase
+- Max 2 gaps per phase
+- titles: under 8 words
+- descriptions: under 20 words
+- mindset text: 1 sentence only
+- relative dates: under 6 words
+- source strings: document name only, no extra detail
 
-For each phase return:
+Return a JSON array of exactly 5 objects with this shape:
 {
   "phase": string,
   "date_range": {
-    "start": string or null,
-    "end": string or null,
-    "relative": string (e.g. "6 weeks before launch" — always include even if specific dates exist),
-    "citation": { "type": "sourced"|"inferred"|"gap", "source": string or null, "note": string or null }
+    "start": string|null, "end": string|null,
+    "relative": string,
+    "citation": { "type": "sourced"|"inferred"|"gap", "source": string|null, "note": string|null }
   },
   "mindset": {
-    "text": string (first person, present tense, 1-2 sentences),
-    "citation": { "type": "sourced"|"inferred", "source": string or null }
+    "text": string,
+    "citation": { "type": "sourced"|"inferred", "source": string|null }
   },
   "events": [
     {
-      "id": string (unique, snake_case),
+      "id": string,
       "title": string,
       "description": string,
       "type": "email"|"in_person"|"social"|"doc"|"platform",
       "control": "in"|"out",
-      "date": {
-        "specific": string or null,
-        "relative": string,
-        "citation": { "type": "sourced"|"inferred"|"gap", "source": string or null, "note": string or null }
-      },
-      "kb_reference": {
-        "title": string or null,
-        "doc_id": string or null,
-        "citation_type": "sourced"|"inferred"|null
-      }
+      "date": { "specific": string|null, "relative": string, "citation": { "type": "sourced"|"inferred"|"gap", "source": string|null, "note": string|null } },
+      "kb_reference": { "title": string|null, "doc_id": string|null, "citation_type": "sourced"|"inferred"|null }
     }
   ],
   "gaps": [
-    {
-      "id": string,
-      "title": string (Gap: [what is missing]),
-      "description": string (why this matters for this persona and what needs to be created),
-      "impact": string (what happens to this persona if this gap is not filled)
-    }
+    { "id": string, "title": string, "description": string, "impact": string }
   ]
 }
 
-Return a JSON array of 5 phase objects. Valid JSON only, no markdown.`;
+Valid JSON only, no markdown.`;
 
 function formatPersona(p: Awaited<ReturnType<typeof getPersonaById>>): string {
   if (!p) return "";
