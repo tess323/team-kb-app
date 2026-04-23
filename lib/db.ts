@@ -28,6 +28,9 @@ const PERSONA_NEW_COLUMNS = [
   "content TEXT",
   "timeline_data TEXT",
   "timeline_gaps TEXT",
+  "timeline_draft TEXT",
+  "timeline_draft_created_at TEXT",
+  "timeline_committed_at TEXT",
 ];
 
 async function setup() {
@@ -141,6 +144,9 @@ export type PersonaRow = {
   content: string | null;
   timeline_data: string | null;
   timeline_gaps: string[] | null;
+  timeline_draft: string | null;
+  timeline_draft_created_at: string | null;
+  timeline_committed_at: string | null;
   google_doc_id: string | null;
   synced_content: string | null;
   last_synced: string | null;
@@ -241,6 +247,27 @@ export async function savePersonaTimeline(personaId: number, timelineData: strin
   await db.execute({
     sql: "UPDATE personas SET timeline_data = ? WHERE persona_id = ?",
     args: [timelineData, personaId],
+  });
+}
+
+export async function saveTimelineDraft(personaId: number, draftData: string) {
+  await ready;
+  await db.execute({
+    sql: "UPDATE personas SET timeline_draft = ?, timeline_draft_created_at = datetime('now') WHERE persona_id = ?",
+    args: [draftData, personaId],
+  });
+}
+
+export async function commitTimelineChanges(personaId: number, updatedLiveData: string) {
+  await ready;
+  await db.execute({
+    sql: `UPDATE personas SET
+      timeline_data = ?,
+      timeline_draft = NULL,
+      timeline_draft_created_at = NULL,
+      timeline_committed_at = datetime('now')
+      WHERE persona_id = ?`,
+    args: [updatedLiveData, personaId],
   });
 }
 
