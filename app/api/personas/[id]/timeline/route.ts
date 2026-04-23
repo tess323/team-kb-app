@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
 
-export const maxDuration = 60;
+export const maxDuration = 300;
 import {
   getPersonaById,
   saveTimelineDraft,
@@ -139,7 +139,7 @@ export async function POST(
     const userContent = `${PROMPT}\n\n<persona>\n${formatPersona(persona)}\n</persona>`;
 
     const message = await client.messages.create({
-      model: "claude-sonnet-4-6",
+      model: "claude-haiku-4-5-20251001",
       max_tokens: 5000,
       messages: [{ role: "user", content: userContent }],
     });
