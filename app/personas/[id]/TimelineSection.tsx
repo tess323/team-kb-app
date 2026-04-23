@@ -732,7 +732,7 @@ export default function TimelineSection({ personaId }: { personaId: number }) {
         <>
           {/* Phase card row */}
           <div className="grid grid-cols-5 gap-2">
-            {displayTimeline.map((ph, pi) => {
+            {displayTimeline.map((ph) => {
               const meta = PHASE_META[ph.phase] ?? { label: ph.phase, color: "#888" };
               const isSelected = selectedPhase === ph.phase;
               const uniqueTypes = [
