@@ -1,16 +1,24 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import type { Citation } from "@/lib/timeline-diff";
+
+export type KBPanelCtx = {
+  title: string;
+  citation?: Citation;
+  context?: string;
+};
 
 export default function KBSidePanel({
-  title,
+  ctx,
   onClose,
 }: {
-  title: string;
+  ctx: KBPanelCtx;
   onClose: () => void;
 }) {
   const [summary, setSummary] = useState("");
   const [loading, setLoading] = useState(true);
+  const { title, citation, context } = ctx;
 
   useEffect(() => {
     setSummary("");
@@ -27,17 +35,22 @@ export default function KBSidePanel({
           },
         ],
       }),
-    }).then(async (res) => {
-      if (!res.body) { setLoading(false); return; }
-      const reader = res.body.getReader();
-      const decoder = new TextDecoder();
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        setSummary((prev) => prev + decoder.decode(value));
-      }
-      setLoading(false);
-    }).catch(() => setLoading(false));
+    })
+      .then(async (res) => {
+        if (!res.body) {
+          setLoading(false);
+          return;
+        }
+        const reader = res.body.getReader();
+        const decoder = new TextDecoder();
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          setSummary((prev) => prev + decoder.decode(value));
+        }
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
   }, [title]);
 
   const searchUrl = `https://drive.google.com/drive/search?q=${encodeURIComponent(title)}`;
@@ -52,6 +65,12 @@ export default function KBSidePanel({
               KB Document
             </p>
             <h3 className="text-sm font-semibold text-ink leading-snug">{title}</h3>
+            {context && (
+              <p className="text-2xs text-ink/50 mt-1.5">Used to generate: {context}</p>
+            )}
+            {citation?.type === "sourced" && citation.note && (
+              <p className="text-xs italic text-ink/60 mt-2 leading-relaxed">"{citation.note}"</p>
+            )}
           </div>
           <button
             onClick={onClose}

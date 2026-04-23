@@ -1,43 +1,28 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import KBSidePanel from "./KBSidePanel";
+import { useState, useEffect, useMemo } from "react";
+import {
+  sortPhases,
+  compareTimelines,
+  type TimelinePhase,
+  type TimelineEvent,
+  type DiffItem,
+  type Citation,
+} from "@/lib/timeline-diff";
+import CitationPill from "./CitationPill";
+import KBSidePanel, { type KBPanelCtx } from "./KBSidePanel";
 
-// ── Types ─────────────────────────────────────────────────────────────────────
-
-type EventType = "email" | "in_person" | "social" | "doc" | "platform";
-
-type TimelineEvent = {
-  id: string;
-  title: string;
-  description: string;
-  type: EventType;
-  control: "in" | "out";
-  kb_link: string | null;
-};
-
-type TimelineGap = {
-  id: string;
-  title: string;
-  description: string;
-};
-
-type TimelinePhase = {
-  phase: string;
-  mindset: string;
-  events: TimelineEvent[];
-  gaps: TimelineGap[];
-};
-
-// ── Constants ─────────────────────────────────────────────────────────────────
+// ── Constants ──────────────────────────────────────────────────────────────────
 
 const PHASE_META: Record<string, { label: string; color: string }> = {
-  before_launch:  { label: "Before Launch",   color: "#534AB7" },
-  launch:         { label: "Launch",           color: "#0F6E56" },
-  summer:         { label: "Summer",           color: "#854F0B" },
-  end_of_summer:  { label: "End of Summer",    color: "#D85A30" },
-  back_to_school: { label: "Back to School",   color: "#185FA5" },
+  before_launch:  { label: "Before Launch",  color: "#534AB7" },
+  launch:         { label: "Launch",          color: "#0F6E56" },
+  summer:         { label: "Summer",          color: "#854F0B" },
+  end_of_summer:  { label: "End of Summer",   color: "#D85A30" },
+  back_to_school: { label: "Back to School",  color: "#185FA5" },
 };
+
+type EventType = "email" | "in_person" | "social" | "doc" | "platform";
 
 const TYPE_LABEL: Record<EventType, string> = {
   email:     "Email",
@@ -55,7 +40,7 @@ const TYPE_CLS: Record<EventType, string> = {
   platform:  "bg-cream-dark text-cream-text",
 };
 
-// ── Icons ─────────────────────────────────────────────────────────────────────
+// ── Icons ──────────────────────────────────────────────────────────────────────
 
 function Icon({ type, size = 14 }: { type: EventType; size?: number }) {
   const s = { width: size, height: size };
@@ -108,101 +93,377 @@ function Icon({ type, size = 14 }: { type: EventType; size?: number }) {
   }
 }
 
-// ── Phase detail panel ────────────────────────────────────────────────────────
+// ── DateDisplay ────────────────────────────────────────────────────────────────
+
+function DateDisplay({
+  date,
+  setKbPanel,
+  context,
+}: {
+  date: TimelineEvent["date"];
+  setKbPanel: (ctx: KBPanelCtx) => void;
+  context: string;
+}) {
+  return (
+    <div className="flex flex-wrap items-center gap-1.5 mt-0.5">
+      {date.specific ? (
+        <span className="text-2xs font-medium text-ink/70">{date.specific}</span>
+      ) : date.citation?.type === "gap" ? (
+        <span className="text-2xs italic text-ink/40">Date unknown</span>
+      ) : null}
+      <span className="text-2xs text-ink/40">{date.relative}</span>
+      {date.citation && (
+        <CitationPill citation={date.citation} context={`${context} (date)`} onOpen={setKbPanel} />
+      )}
+    </div>
+  );
+}
+
+// ── DiffField ──────────────────────────────────────────────────────────────────
+
+function DiffField({
+  path,
+  value,
+  diffs,
+  decisions,
+  onDecide,
+  className = "",
+}: {
+  path: string;
+  value: string | null;
+  diffs: DiffItem[];
+  decisions: Record<string, "accepted" | "rejected">;
+  onDecide: (path: string, d: "accepted" | "rejected") => void;
+  className?: string;
+}) {
+  const diff = diffs.find((d) => d.path === path);
+  if (!diff) return <span className={className}>{value ?? ""}</span>;
+
+  const decision = decisions[path];
+  const liveVal = (diff.liveValue ?? "") as string;
+
+  if (decision === "accepted") {
+    return (
+      <span className={`${className} text-hunter`}>
+        {value ?? ""}
+        <button
+          onClick={() => onDecide(path, "accepted")}
+          className="ml-2 text-2xs font-medium text-hunter/60 hover:text-hunter underline"
+        >
+          Undo
+        </button>
+      </span>
+    );
+  }
+
+  if (decision === "rejected") {
+    return (
+      <span className={`${className} text-ink/50`}>
+        {liveVal || <em className="text-ink/30">empty</em>}
+        <button
+          onClick={() => onDecide(path, "rejected")}
+          className="ml-2 text-2xs font-medium text-rose/60 hover:text-rose underline"
+        >
+          Undo
+        </button>
+      </span>
+    );
+  }
+
+  return (
+    <span className={className}>
+      {liveVal && (
+        <span className="block line-through opacity-30 text-xs mb-0.5">{liveVal}</span>
+      )}
+      <span>{value ?? ""}</span>
+      <span className="inline-flex gap-1 ml-2">
+        <button
+          onClick={() => onDecide(path, "accepted")}
+          className="text-2xs px-1.5 py-0.5 bg-hunter-muted text-hunter rounded font-medium hover:bg-hunter/20 transition-colors"
+        >
+          ✓
+        </button>
+        <button
+          onClick={() => onDecide(path, "rejected")}
+          className="text-2xs px-1.5 py-0.5 bg-rose-muted text-rose rounded font-medium hover:bg-rose/20 transition-colors"
+        >
+          ✗
+        </button>
+      </span>
+    </span>
+  );
+}
+
+// ── PhaseDetail ────────────────────────────────────────────────────────────────
 
 function PhaseDetail({
+  phaseIndex,
   phase,
+  livePhase,
   meta,
   dismissedGaps,
   onDismiss,
-  onKBLink,
+  setKbPanel,
+  diffs,
+  decisions,
+  onDecide,
 }: {
+  phaseIndex: number;
   phase: TimelinePhase;
+  livePhase: TimelinePhase | undefined;
   meta: { label: string; color: string };
   dismissedGaps: string[];
   onDismiss: (id: string) => void;
-  onKBLink: (title: string) => void;
+  setKbPanel: (ctx: KBPanelCtx) => void;
+  diffs: DiffItem[];
+  decisions: Record<string, "accepted" | "rejected">;
+  onDecide: (path: string, d: "accepted" | "rejected") => void;
 }) {
-  const activeGaps = phase.gaps.filter((g) => !dismissedGaps.includes(g.id));
+  const prefix = `phases[${phaseIndex}]`;
+  const isReview = diffs.length > 0;
+
+  // Safe mindset text accessor (handles old string format in live data)
+  const mindsetText =
+    typeof phase.mindset === "string"
+      ? (phase.mindset as string)
+      : phase.mindset?.text ?? "";
+  const mindsetCitation =
+    typeof phase.mindset === "string" ? null : phase.mindset?.citation ?? null;
+
+  // Gap categorization when in review mode
+  const liveGapIds = new Set(livePhase?.gaps?.map((g) => g.id) ?? []);
+  const draftGapIds = new Set(phase.gaps?.map((g) => g.id) ?? []);
+  const resolvedGaps = isReview
+    ? (livePhase?.gaps ?? []).filter((g) => !draftGapIds.has(g.id) && !dismissedGaps.includes(g.id))
+    : [];
+  const activeGaps = (phase.gaps ?? []).filter((g) => !dismissedGaps.includes(g.id));
 
   return (
     <div className="mt-3 rounded-md bg-cream border border-cream-dark p-5">
       {/* Mindset */}
       <div className="flex gap-3 mb-5">
         <div className="w-1 shrink-0 rounded-full self-stretch" style={{ backgroundColor: meta.color }} />
-        <div>
-          <p className="text-2xs font-semibold uppercase tracking-wide mb-1" style={{ color: meta.color }}>
+        <div className="flex-1 min-w-0">
+          <p className="text-2xs font-semibold uppercase tracking-wide mb-1.5" style={{ color: meta.color }}>
             {meta.label}
           </p>
-          <p className="text-sm italic text-ink/70 leading-relaxed">{phase.mindset}</p>
+
+          {/* Date range */}
+          {phase.date_range && (
+            <div className="flex flex-wrap items-center gap-1.5 mb-2">
+              {phase.date_range.start && (
+                <span className="text-2xs text-ink/60">
+                  {phase.date_range.start}
+                  {phase.date_range.end ? ` – ${phase.date_range.end}` : ""}
+                </span>
+              )}
+              <span className="text-2xs text-ink/40 italic">{phase.date_range.relative}</span>
+              {phase.date_range.citation && (
+                <CitationPill
+                  citation={phase.date_range.citation}
+                  context={`${meta.label} dates`}
+                  onOpen={setKbPanel}
+                />
+              )}
+            </div>
+          )}
+
+          {/* Mindset quote */}
+          <div className="flex flex-wrap items-start gap-2">
+            <p className="text-sm italic text-ink/70 leading-relaxed flex-1">
+              {isReview ? (
+                <DiffField
+                  path={`${prefix}.mindset.text`}
+                  value={mindsetText}
+                  diffs={diffs}
+                  decisions={decisions}
+                  onDecide={onDecide}
+                  className="italic"
+                />
+              ) : (
+                mindsetText
+              )}
+            </p>
+            {mindsetCitation && !isReview && (
+              <CitationPill citation={mindsetCitation} context="mindset" onOpen={setKbPanel} />
+            )}
+          </div>
         </div>
       </div>
 
       {/* Events */}
-      {phase.events.length > 0 && (
+      {(phase.events ?? []).length > 0 && (
         <div className="space-y-2 mb-4">
-          {phase.events.map((ev) => (
-            <div key={ev.id} className="flex gap-3 p-3 bg-white rounded border border-parchment-dark">
-              <span className="mt-0.5 text-ink/40 shrink-0">
-                <Icon type={ev.type} size={14} />
-              </span>
-              <div className="flex-1 min-w-0">
-                <div className="flex flex-wrap items-center gap-1.5 mb-1">
-                  <span className="text-sm font-medium text-ink">{ev.title}</span>
-                  <span
-                    className={`text-2xs px-1.5 py-0.5 rounded-full font-medium ${
-                      ev.control === "in"
-                        ? "bg-hunter-muted text-hunter"
-                        : "bg-rose-muted text-rose"
-                    }`}
-                  >
-                    {ev.control === "in" ? "In our control" : "Out of our control"}
-                  </span>
-                  {ev.kb_link && (
-                    <button
-                      onClick={() => onKBLink(ev.kb_link!)}
-                      className="inline-flex items-center gap-1 text-2xs px-1.5 py-0.5 rounded-full font-medium bg-slate-muted text-slate hover:bg-slate/20 transition-colors"
+          {(phase.events ?? []).map((ev, ei) => {
+            const ep = `${prefix}.events[${ei}]`;
+            const kbRef = ev.kb_reference;
+            const kbCitation: Citation | null =
+              kbRef?.title && kbRef.citation_type
+                ? { type: kbRef.citation_type, source: kbRef.title, note: null }
+                : null;
+
+            return (
+              <div key={ev.id} className="flex gap-3 p-3 bg-white rounded border border-parchment-dark">
+                <span className="mt-0.5 text-ink/40 shrink-0">
+                  <Icon type={ev.type as EventType} size={14} />
+                </span>
+                <div className="flex-1 min-w-0">
+                  {/* Title row */}
+                  <div className="flex flex-wrap items-start gap-1.5 mb-1">
+                    <span className="text-sm font-medium text-ink">
+                      {isReview ? (
+                        <DiffField
+                          path={`${ep}.title`}
+                          value={ev.title}
+                          diffs={diffs}
+                          decisions={decisions}
+                          onDecide={onDecide}
+                          className="font-medium"
+                        />
+                      ) : (
+                        ev.title
+                      )}
+                    </span>
+                    <span
+                      className={`text-2xs px-1.5 py-0.5 rounded-full font-medium ${
+                        ev.control === "in"
+                          ? "bg-hunter-muted text-hunter"
+                          : "bg-rose-muted text-rose"
+                      }`}
                     >
-                      <Icon type="doc" size={9} />
-                      {ev.kb_link}
-                    </button>
+                      {ev.control === "in" ? "In our control" : "Out of our control"}
+                    </span>
+                    <span className={`inline-flex items-center gap-0.5 text-2xs px-1.5 py-0.5 rounded-full font-medium ${TYPE_CLS[ev.type as EventType] ?? ""}`}>
+                      <Icon type={ev.type as EventType} size={9} />
+                      {TYPE_LABEL[ev.type as EventType] ?? ev.type}
+                    </span>
+                    {kbRef?.title && kbCitation && (
+                      <CitationPill
+                        citation={kbCitation}
+                        context={ev.title}
+                        onOpen={setKbPanel}
+                      />
+                    )}
+                  </div>
+
+                  {/* Date */}
+                  {ev.date && (
+                    <DateDisplay date={ev.date} setKbPanel={setKbPanel} context={ev.title} />
                   )}
+
+                  {/* Description */}
+                  <p className="text-xs text-ink/60 leading-relaxed mt-1.5">
+                    {isReview ? (
+                      <DiffField
+                        path={`${ep}.description`}
+                        value={ev.description}
+                        diffs={diffs}
+                        decisions={decisions}
+                        onDecide={onDecide}
+                      />
+                    ) : (
+                      ev.description
+                    )}
+                  </p>
                 </div>
-                <p className="text-xs text-ink/60 leading-relaxed">{ev.description}</p>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
 
       {/* Gaps */}
-      {activeGaps.length > 0 && (
+      {(activeGaps.length > 0 || resolvedGaps.length > 0) && (
         <div>
           <p className="text-2xs font-semibold text-ink/50 uppercase tracking-wide mb-2">
             Content Gaps
           </p>
           <div className="space-y-2">
-            {activeGaps.map((gap) => (
+            {/* Gaps that may now be resolved (in live but not draft) */}
+            {resolvedGaps.map((gap) => (
               <div
                 key={gap.id}
-                className="flex gap-3 p-3 bg-rose-muted rounded border border-rose-light"
+                className="flex gap-3 p-3 bg-hunter-muted rounded border border-hunter-light opacity-60"
               >
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-ink mb-0.5">{gap.title}</p>
-                  <p className="text-xs text-ink/60 leading-relaxed">{gap.description}</p>
+                  <p className="text-2xs font-semibold text-hunter mb-0.5 uppercase tracking-wide">
+                    Gap may be resolved
+                  </p>
+                  <p className="text-sm font-medium text-ink line-through mb-0.5">{gap.title}</p>
+                  <p className="text-xs text-ink/60 leading-relaxed line-through">{gap.description}</p>
                 </div>
-                <button
-                  onClick={() => onDismiss(gap.id)}
-                  title="Dismiss"
-                  className="shrink-0 mt-0.5 text-ink/30 hover:text-ink transition-colors"
-                >
-                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                    <line x1="2" y1="2" x2="12" y2="12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-                    <line x1="12" y1="2" x2="2" y2="12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-                  </svg>
-                </button>
               </div>
             ))}
+
+            {/* Active gaps */}
+            {activeGaps.map((gap) => {
+              const isNew = isReview && !liveGapIds.has(gap.id);
+              const gi = (phase.gaps ?? []).findIndex((g) => g.id === gap.id);
+              const gp = `${prefix}.gaps[${gi}]`;
+
+              return (
+                <div
+                  key={gap.id}
+                  className={`flex gap-3 p-3 rounded border ${
+                    isNew
+                      ? "bg-ochre-muted border-ochre-light"
+                      : "bg-rose-muted border-rose-light"
+                  }`}
+                >
+                  <div className="flex-1 min-w-0">
+                    {isNew && (
+                      <p className="text-2xs font-semibold text-ochre mb-0.5 uppercase tracking-wide">
+                        New gap identified
+                      </p>
+                    )}
+                    <p className="text-sm font-medium text-ink mb-0.5">
+                      {isReview && gi >= 0 ? (
+                        <DiffField
+                          path={`${gp}.title`}
+                          value={gap.title}
+                          diffs={diffs}
+                          decisions={decisions}
+                          onDecide={onDecide}
+                          className="font-medium"
+                        />
+                      ) : (
+                        gap.title
+                      )}
+                    </p>
+                    <p className="text-xs text-ink/60 leading-relaxed">
+                      {isReview && gi >= 0 ? (
+                        <DiffField
+                          path={`${gp}.description`}
+                          value={gap.description}
+                          diffs={diffs}
+                          decisions={decisions}
+                          onDecide={onDecide}
+                        />
+                      ) : (
+                        gap.description
+                      )}
+                    </p>
+                    {gap.impact && (
+                      <p className="text-xs text-ink/50 italic mt-1 leading-relaxed">
+                        Impact: {gap.impact}
+                      </p>
+                    )}
+                  </div>
+                  {!isNew && (
+                    <button
+                      onClick={() => onDismiss(gap.id)}
+                      title="Dismiss"
+                      className="shrink-0 mt-0.5 text-ink/30 hover:text-ink transition-colors"
+                    >
+                      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                        <line x1="2" y1="2" x2="12" y2="12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                        <line x1="12" y1="2" x2="2" y2="12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                      </svg>
+                    </button>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
       )}
@@ -210,41 +471,96 @@ function PhaseDetail({
   );
 }
 
-// ── Main component ────────────────────────────────────────────────────────────
+// ── Main component ─────────────────────────────────────────────────────────────
 
 export default function TimelineSection({ personaId }: { personaId: number }) {
-  const [timeline, setTimeline] = useState<TimelinePhase[] | null>(null);
+  const [liveTimeline, setLiveTimeline] = useState<TimelinePhase[] | null>(null);
+  const [draftTimeline, setDraftTimeline] = useState<TimelinePhase[] | null>(null);
+  const [draftCreatedAt, setDraftCreatedAt] = useState<string | null>(null);
   const [dismissedGaps, setDismissedGaps] = useState<string[]>([]);
   const [selectedPhase, setSelectedPhase] = useState<string | null>(null);
   const [generating, setGenerating] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [kbDoc, setKbDoc] = useState<string | null>(null);
+  const [kbPanel, setKbPanel] = useState<KBPanelCtx | null>(null);
+  const [decisions, setDecisions] = useState<Record<string, "accepted" | "rejected">>({});
+  const [committing, setCommitting] = useState(false);
 
-  const storageKey = `timeline-phase-${personaId}`;
+  const phaseKey = `timeline-phase-${personaId}`;
+  const reviewKey = `timeline-review-${personaId}`;
+
+  // ── Load ────────────────────────────────────────────────────────────────────
 
   useEffect(() => {
-    const saved = localStorage.getItem(storageKey);
+    const savedPhase = localStorage.getItem(phaseKey);
 
     fetch(`/api/personas/${personaId}/timeline`)
       .then((r) => r.json())
       .then((data) => {
+        let live: TimelinePhase[] | null = null;
+        let draft: TimelinePhase[] | null = null;
+
         if (data.timeline_data) {
+          try { live = JSON.parse(data.timeline_data); } catch { /* ignore */ }
+        }
+        if (data.timeline_draft) {
+          try { draft = JSON.parse(data.timeline_draft); } catch { /* ignore */ }
+        }
+
+        setLiveTimeline(live);
+        setDraftTimeline(draft);
+        setDraftCreatedAt(data.timeline_draft_created_at ?? null);
+        setDismissedGaps(data.timeline_gaps ?? []);
+
+        const display = draft ?? live;
+        if (display) {
+          const sorted = sortPhases(display);
+          const restore = savedPhase ?? sorted[0]?.phase ?? null;
+          setSelectedPhase(restore);
+        }
+
+        // Restore saved decisions if draft timestamp matches
+        if (draft && data.timeline_draft_created_at) {
           try {
-            const phases = JSON.parse(data.timeline_data);
-            setTimeline(phases);
-            const restore = saved ?? phases[0]?.phase ?? null;
-            setSelectedPhase(restore);
+            const saved = localStorage.getItem(reviewKey);
+            if (saved) {
+              const { draftTimestamp, decisions: savedDecisions } = JSON.parse(saved);
+              if (draftTimestamp === data.timeline_draft_created_at) {
+                setDecisions(savedDecisions);
+              }
+            }
           } catch { /* ignore */ }
         }
-        setDismissedGaps(data.timeline_gaps ?? []);
       })
       .catch(() => { /* silently fail */ })
       .finally(() => setLoading(false));
-  }, [personaId, storageKey]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [personaId]);
 
   useEffect(() => {
-    if (selectedPhase) localStorage.setItem(storageKey, selectedPhase);
-  }, [selectedPhase, storageKey]);
+    if (selectedPhase) localStorage.setItem(phaseKey, selectedPhase);
+  }, [selectedPhase, phaseKey]);
+
+  useEffect(() => {
+    if (!draftCreatedAt) return;
+    localStorage.setItem(reviewKey, JSON.stringify({ draftTimestamp: draftCreatedAt, decisions }));
+  }, [decisions, draftCreatedAt, reviewKey]);
+
+  // ── Derived state ───────────────────────────────────────────────────────────
+
+  const isReviewMode = !!draftTimeline;
+  const sortedLive = useMemo(() => (liveTimeline ? sortPhases(liveTimeline) : []), [liveTimeline]);
+  const sortedDraft = useMemo(() => (draftTimeline ? sortPhases(draftTimeline) : []), [draftTimeline]);
+  const displayTimeline = isReviewMode ? sortedDraft : sortedLive;
+
+  const diffs: DiffItem[] = useMemo(
+    () => (draftTimeline ? compareTimelines(liveTimeline ?? [], draftTimeline) : []),
+    [liveTimeline, draftTimeline]
+  );
+
+  const reviewedCount = diffs.filter((d) => !!decisions[d.path]).length;
+  const acceptedPaths = diffs.filter((d) => decisions[d.path] === "accepted").map((d) => d.path);
+
+  // ── Actions ─────────────────────────────────────────────────────────────────
 
   async function handleGenerate() {
     setGenerating(true);
@@ -254,15 +570,54 @@ export default function TimelineSection({ personaId }: { personaId: number }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ action: "generate" }),
       });
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(`Generation failed (${res.status}): ${text.slice(0, 200)}`);
+      }
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "Generation failed");
-      const phases: TimelinePhase[] = JSON.parse(data.timeline_data);
-      setTimeline(phases);
-      setSelectedPhase((prev) => prev ?? phases[0]?.phase ?? null);
+
+      let draft: TimelinePhase[] | null = null;
+      try { draft = JSON.parse(data.timeline_draft); } catch { /* ignore */ }
+
+      setDraftTimeline(draft);
+      setDraftCreatedAt(data.timeline_draft_created_at ?? null);
+      setDecisions({});
+      localStorage.removeItem(reviewKey);
+
+      if (draft) {
+        const sorted = sortPhases(draft);
+        setSelectedPhase((prev) => prev ?? sorted[0]?.phase ?? null);
+      }
     } catch (e) {
       console.error("[timeline]", e);
     } finally {
       setGenerating(false);
+    }
+  }
+
+  async function handleCommit() {
+    setCommitting(true);
+    try {
+      const res = await fetch(`/api/personas/${personaId}/timeline`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "commit-changes", acceptedPaths }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? "Commit failed");
+
+      let live: TimelinePhase[] | null = null;
+      try { live = JSON.parse(data.timeline_data); } catch { /* ignore */ }
+
+      setLiveTimeline(live);
+      setDraftTimeline(null);
+      setDraftCreatedAt(null);
+      setDecisions({});
+      localStorage.removeItem(reviewKey);
+    } catch (e) {
+      console.error("[timeline commit]", e);
+    } finally {
+      setCommitting(false);
     }
   }
 
@@ -275,39 +630,127 @@ export default function TimelineSection({ personaId }: { personaId: number }) {
     });
   }
 
+  function handleDecide(path: string, decision: "accepted" | "rejected") {
+    setDecisions((prev) => {
+      if (prev[path] === decision) {
+        const { [path]: _, ...rest } = prev;
+        return rest;
+      }
+      return { ...prev, [path]: decision };
+    });
+  }
+
+  function handleAcceptAll() {
+    const all: Record<string, "accepted" | "rejected"> = {};
+    for (const d of diffs) all[d.path] = "accepted";
+    setDecisions(all);
+  }
+
+  function handleRejectAll() {
+    const all: Record<string, "accepted" | "rejected"> = {};
+    for (const d of diffs) all[d.path] = "rejected";
+    setDecisions(all);
+  }
+
   function togglePhase(phase: string) {
     setSelectedPhase((prev) => (prev === phase ? null : phase));
   }
 
   if (loading) return null;
 
-  const currentPhase = timeline?.find((p) => p.phase === selectedPhase);
+  const currentPhaseIndex = displayTimeline.findIndex((p) => p.phase === selectedPhase);
+  const currentPhase = currentPhaseIndex >= 0 ? displayTimeline[currentPhaseIndex] : null;
 
   return (
-    <div className="bg-parchment border border-parchment-dark rounded-md p-6">
+    <div className="bg-parchment border border-parchment-dark rounded-md p-6 mb-4">
+
+      {/* Draft notification bar */}
+      {isReviewMode && (
+        <div className="flex items-center justify-between gap-3 mb-4 px-4 py-2.5 bg-ochre-muted border border-ochre-light rounded-md">
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-semibold text-ochre">Draft ready</span>
+            <span className="text-xs text-ink/60">
+              {diffs.length} field{diffs.length !== 1 ? "s" : ""} changed · {reviewedCount} of {diffs.length} reviewed
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleRejectAll}
+              className="text-2xs px-2.5 py-1 rounded font-medium text-ink/60 hover:text-ink transition-colors"
+            >
+              Reject all
+            </button>
+            <button
+              onClick={handleAcceptAll}
+              className="text-2xs px-2.5 py-1 rounded font-medium bg-hunter-muted text-hunter hover:bg-hunter/20 transition-colors"
+            >
+              Accept all
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Header row */}
       <div className="flex items-center justify-between mb-5">
         <p className="text-2xs font-semibold text-ink/50 uppercase tracking-wide">
           Communication Timeline
+          {isReviewMode && (
+            <span className="ml-2 normal-case font-normal text-ochre">· reviewing draft</span>
+          )}
         </p>
-        <button
-          onClick={handleGenerate}
-          disabled={generating}
-          className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-md bg-hunter text-cream hover:bg-hunter/90 transition-colors disabled:opacity-40"
-        >
-          {generating ? "Generating…" : timeline ? "Regenerate" : "Generate timeline"}
-        </button>
+        <div className="flex items-center gap-2">
+          {isReviewMode && (
+            <button
+              onClick={handleCommit}
+              disabled={committing}
+              className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-md bg-hunter text-cream hover:bg-hunter/90 transition-colors disabled:opacity-40"
+            >
+              {committing
+                ? "Committing…"
+                : acceptedPaths.length > 0
+                ? `Commit ${acceptedPaths.length} accepted`
+                : "Commit (no changes)"}
+            </button>
+          )}
+          <button
+            onClick={handleGenerate}
+            disabled={generating}
+            className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-md border border-hunter/30 text-hunter hover:bg-hunter-muted transition-colors disabled:opacity-40"
+          >
+            {generating
+              ? "Reviewing…"
+              : isReviewMode
+              ? "Regenerate"
+              : displayTimeline.length > 0
+              ? "Regenerate"
+              : "Generate timeline"}
+          </button>
+        </div>
       </div>
 
-      {timeline ? (
+      {displayTimeline.length > 0 ? (
         <>
           {/* Phase card row */}
           <div className="grid grid-cols-5 gap-2">
-            {timeline.map((ph) => {
+            {displayTimeline.map((ph, pi) => {
               const meta = PHASE_META[ph.phase] ?? { label: ph.phase, color: "#888" };
               const isSelected = selectedPhase === ph.phase;
-              const uniqueTypes = [...new Set(ph.events.map((e) => e.type))] as EventType[];
-              const activeGapCount = ph.gaps.filter((g) => !dismissedGaps.includes(g.id)).length;
+              const uniqueTypes = [
+                ...new Set((ph.events ?? []).map((e) => e.type)),
+              ] as EventType[];
+              const activeGapCount = (ph.gaps ?? []).filter(
+                (g) => !dismissedGaps.includes(g.id)
+              ).length;
+              const phaseChanges = isReviewMode
+                ? diffs.filter(
+                    (d) => d.phase === ph.phase && !decisions[d.path]
+                  ).length
+                : 0;
+
+              const mindsetPreview =
+                typeof ph.mindset === "string"
+                  ? (ph.mindset as string)
+                  : ph.mindset?.text ?? "";
 
               return (
                 <button
@@ -327,7 +770,7 @@ export default function TimelineSection({ personaId }: { personaId: number }) {
                     {meta.label}
                   </p>
                   <p className="text-xs italic text-ink/55 leading-snug line-clamp-2 mb-2">
-                    {ph.mindset}
+                    {mindsetPreview}
                   </p>
                   <div className="flex flex-wrap gap-1 mb-1.5">
                     {uniqueTypes.map((t) => (
@@ -340,11 +783,18 @@ export default function TimelineSection({ personaId }: { personaId: number }) {
                       </span>
                     ))}
                   </div>
-                  {activeGapCount > 0 && (
-                    <span className="inline-flex text-2xs font-medium px-1.5 py-0.5 rounded-full bg-rose-muted text-rose">
-                      {activeGapCount} gap{activeGapCount > 1 ? "s" : ""}
-                    </span>
-                  )}
+                  <div className="flex flex-wrap gap-1">
+                    {activeGapCount > 0 && (
+                      <span className="inline-flex text-2xs font-medium px-1.5 py-0.5 rounded-full bg-rose-muted text-rose">
+                        {activeGapCount} gap{activeGapCount > 1 ? "s" : ""}
+                      </span>
+                    )}
+                    {phaseChanges > 0 && (
+                      <span className="inline-flex text-2xs font-medium px-1.5 py-0.5 rounded-full bg-ochre-muted text-ochre">
+                        {phaseChanges} change{phaseChanges > 1 ? "s" : ""}
+                      </span>
+                    )}
+                  </div>
                 </button>
               );
             })}
@@ -353,11 +803,16 @@ export default function TimelineSection({ personaId }: { personaId: number }) {
           {/* Detail panel */}
           {currentPhase && (
             <PhaseDetail
+              phaseIndex={currentPhaseIndex}
               phase={currentPhase}
+              livePhase={sortedLive.find((p) => p.phase === currentPhase.phase)}
               meta={PHASE_META[currentPhase.phase] ?? { label: currentPhase.phase, color: "#888" }}
               dismissedGaps={dismissedGaps}
               onDismiss={handleDismiss}
-              onKBLink={setKbDoc}
+              setKbPanel={setKbPanel}
+              diffs={diffs}
+              decisions={decisions}
+              onDecide={handleDecide}
             />
           )}
         </>
@@ -367,7 +822,7 @@ export default function TimelineSection({ personaId }: { personaId: number }) {
         </p>
       )}
 
-      {kbDoc && <KBSidePanel title={kbDoc} onClose={() => setKbDoc(null)} />}
+      {kbPanel && <KBSidePanel ctx={kbPanel} onClose={() => setKbPanel(null)} />}
     </div>
   );
 }

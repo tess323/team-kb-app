@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
+
+export const maxDuration = 60;
 import {
   getPersonaById,
   saveTimelineDraft,
@@ -136,13 +138,18 @@ export async function POST(
     if (!persona) return NextResponse.json({ error: "Persona not found" }, { status: 404 });
 
     let kb = "";
-    try { kb = await fetchKnowledgeBase(); } catch { /* proceed without KB */ }
+    try {
+      kb = await Promise.race([
+        fetchKnowledgeBase(),
+        new Promise<string>((_, reject) => setTimeout(() => reject(new Error("KB timeout")), 20000)),
+      ]);
+    } catch { /* proceed without KB */ }
 
     const userContent = `${PROMPT}\n\n<persona>\n${formatPersona(persona)}\n</persona>\n\n<knowledge_base>\n${kb}\n</knowledge_base>`;
 
     const message = await client.messages.create({
       model: "claude-sonnet-4-6",
-      max_tokens: 8096,
+      max_tokens: 5000,
       messages: [{ role: "user", content: userContent }],
     });
 
