@@ -627,23 +627,12 @@ export default function TimelineSection({ personaId }: { personaId: number }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ action: "generate" }),
       });
-      if (!res.ok || !res.body) {
+      if (!res.ok) {
         const text = await res.text();
         throw new Error(`Generation failed (${res.status}): ${text.slice(0, 200)}`);
       }
 
-      // Read streaming response — heartbeat spaces keep Vercel alive,
-      // final chunk is the JSON result
-      const reader = res.body.getReader();
-      const decoder = new TextDecoder();
-      let raw = "";
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        raw += decoder.decode(value, { stream: true });
-      }
-      const jsonStr = raw.trim();
-      const data = JSON.parse(jsonStr);
+      const data = await res.json();
       if (data.error) throw new Error(data.error);
 
       let draft: TimelinePhase[] | null = null;
