@@ -61,11 +61,6 @@ async function setup() {
 }
 
 async function seedPersonas() {
-  const { rows } = await db.execute(
-    "SELECT COUNT(*) as count FROM personas WHERE name IS NOT NULL"
-  );
-  if ((rows[0].count as number) > 0) return;
-
   const seedPath = resolve(process.cwd(), "data/personas-seed.json");
   let seed: Record<string, unknown>[];
   try {
@@ -77,6 +72,12 @@ async function seedPersonas() {
   const serial = (v: unknown) => (Array.isArray(v) ? JSON.stringify(v) : null);
 
   for (const p of seed) {
+    const existing = await db.execute({
+      sql: "SELECT persona_id FROM personas WHERE name = ?",
+      args: [p.name as string],
+    });
+    if (existing.rows.length > 0) continue;
+
     await db.execute({
       sql: `INSERT INTO personas (name, role, grade_band, relationship, motivation, current_course,
         goals, pain_points, ai_relationship, rebrand_risk, needs, quote, background, excited_about,

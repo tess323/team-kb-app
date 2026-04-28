@@ -492,5 +492,59 @@
       "Social media algorithm and organic discovery",
       "Competing curriculum vendor outreach to new teachers"
     ]
+  },
+  {
+    "name": "Janelle Foster",
+    "role": "HS CS Teacher",
+    "grade_band": "9-12",
+    "relationship": "Active",
+    "motivation": "Early Adopter",
+    "current_course": "AI Foundations — Year 1 Complete, Summer PD Bound",
+    "goals": [
+      "Go into Year 2 of AIF with a real plan for Unit 2 — not just survival mode",
+      "Get meaningfully prepared for Semester 2 before she is standing in front of students teaching it",
+      "Understand whether Unit 2 struggles were her problem or a curriculum design problem — and get honest answers",
+      "Build a network of AIF teachers she can reach when something is not working mid-unit",
+      "Ensure her first-year experience actually shapes what Year 2 of the course looks like"
+    ],
+    "pain_points": [
+      "Unit 2 pacing: too many new concepts introduced too quickly, with insufficient scaffolding for students without the assumed math background",
+      "Has specific opinions about Unit 2's position in the course sequence — believes it lands better later in the year, after students have more context and confidence",
+      "Semester 2 is entirely new territory with the same programming risks that made Unit 2 hard",
+      "Felt professionally alone during the hard stretch of Unit 2 — no real-time community of AIF peers to reach",
+      "Has submitted two post-unit reflections and does not know if anyone at Code.org has read them",
+      "Going into Year 2 carrying two challenges at once — fixing something that broke and launching something brand new — with summer PD as her only preparation window"
+    ],
+    "ai_relationship": "Informed and practically oriented. Understands the content well enough to teach it and has developing enthusiasm. Her relationship to AI is defined entirely by what she can and cannot successfully teach. Confidence drops in programming-heavy units. Less interested in big ideas than in what works with 28 ninth graders with mixed math readiness.",
+    "rebrand_risk": "Janelle arrives at summer workshop and the session is rebranded but the curriculum support is not improved. She concludes that organizational energy went into marketing, not into fixing the things she documented. She begins to disengage — not loudly, but permanently. She has been too invested to leave quickly, but the commitment has a ceiling and the rebrand just clarified where it is. Her question is not 'where is this going?' — it is 'will the people running this actually listen to the teachers who are in the room?'",
+    "needs": [
+      "A frank acknowledgment at summer workshop that Unit 2 was hard for a lot of teachers — and a concrete plan for what is being done about it",
+      "Revised or supplemental Unit 2 materials that address pacing and scaffold programming content more explicitly",
+      "A substantive orientation to Semester 2 — enough to walk in on day one feeling like a teacher, not a first-time reader",
+      "A clear explanation of why Unit 2 is sequenced where it is — and genuine openness to the possibility it works better later",
+      "A cohort of Year 2 AIF teachers she can stay in contact with beyond the workshop",
+      "Recognition that her first-year experience is data, not complaint — and that Code.org wants it"
+    ],
+    "quote": "I survived Unit 2. My students survived Unit 2. But surviving is not the same as learning, and I know the difference. Fix the pacing, fix the sequencing, and I will teach this course for the next ten years.",
+    "background": "Janelle came to AI Foundations from six years teaching CS Principles. She was recruited by her curriculum director to pilot AIF when her district decided to build an AI pathway — she said yes because she trusted her director and was ready for something new. Semester 1 went better than expected. Unit 1 felt manageable and students were engaged by the conceptual framing. Then Unit 2 arrived: the pacing felt off from week one, programming demands hit harder than anticipated, and students who had thrived in Unit 1 started to disengage. She finished the year committed to the course — but heads into Year 2 carrying two simultaneous challenges: reteaching Unit 2 better, and teaching Semester 2 for the very first time. Age 42, large suburban district in Tennessee, 16 years in education, two sections of AI Foundations (9th & 10th grade).",
+    "excited_about": "A summer workshop that addresses Unit 2 directly and gives her a real Semester 2 preview. The possibility that Code.org is listening. A community of AIF teachers she can call mid-unit — not just a one-time PD cohort.",
+    "nervous_about": "That the workshop covers only one of her two needs and she'll have to fight for the other. That Semester 2 carries the same risks as Unit 2 — programming-heavy, prerequisite-dependent — and she'll walk in underprepared again. That her feedback reflections will go unread.",
+    "success_looks_like": "Janelle leaves summer PD with a revised Unit 2 pacing plan, a working understanding of Semester 2, and a cohort of AIF peers she trusts. She returns in the fall feeling like a prepared teacher — not someone in survival mode for the second year running. Her feedback is visibly reflected in curriculum changes.",
+    "failure_looks_like": "The workshop is general and doesn't address Unit 2 or Semester 2 with specificity. She leaves without meaningful prep or community. Year 2 repeats Year 1's hard stretches. She concludes the organizational energy went into the rebrand, not the curriculum — and starts quietly looking for an alternative.",
+    "aim_feeling": "Heard and equipped. She should leave feeling like a professional whose hard-won experience shaped something real — not like someone who filled out a feedback form that disappeared. Confident going into Year 2. Part of a community.",
+    "comms_in_control": [
+      "Summer workshop direct communication and curriculum sessions",
+      "Pre-workshop email confirming Unit 2 and Semester 2 coverage on the agenda",
+      "Acknowledgment of Year 1 teacher feedback in workshop materials",
+      "Post-workshop cohort infrastructure (Slack, email group, or community space)",
+      "Revised Unit 2 materials and supplemental scaffolding released before school year",
+      "CodeAI platform in-product messaging"
+    ],
+    "comms_out_of_control": [
+      "Peer teacher word-of-mouth about workshop quality",
+      "Curriculum director's framing of the CodeAI rebrand to Janelle's school",
+      "Other AIF teachers' Year 1 experiences shaping her expectations going in",
+      "District scheduling decisions affecting course viability in Year 2"
+    ]
   }
 ]
