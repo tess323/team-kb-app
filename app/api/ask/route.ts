@@ -16,13 +16,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "messages array is required" }, { status: 400 });
   }
 
-  let context: string;
+  let context = "";
   try {
     context = await fetchKnowledgeBase();
   } catch (err) {
-    const message = err instanceof Error ? err.message : String(err);
-    console.error("[/api/ask] KB fetch failed:", message);
-    return NextResponse.json({ error: "Failed to fetch knowledge base", detail: message }, { status: 500 });
+    console.error("[/api/ask] KB fetch failed:", err instanceof Error ? err.message : err);
   }
 
   const lastUserMessage = messages[messages.length - 1].content.toLowerCase();
