@@ -56,8 +56,13 @@ export async function fetchKnowledgeBase(): Promise<string> {
         const res = await docsApi.documents.get({ documentId: id });
         return extractDocText(res.data);
       } catch {
-        const res = await slidesApi.presentations.get({ presentationId: id });
-        return extractSlidesText(res.data);
+        try {
+          const res = await slidesApi.presentations.get({ presentationId: id });
+          return extractSlidesText(res.data);
+        } catch (err) {
+          console.error(`[gdrive] failed to fetch doc/slide ${id}:`, err instanceof Error ? err.message : err);
+          return "";
+        }
       }
     })
   );
