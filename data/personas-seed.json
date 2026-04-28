@@ -546,5 +546,56 @@
       "Other AIF teachers' Year 1 experiences shaping her expectations going in",
       "District scheduling decisions affecting course viability in Year 2"
     ]
+  },
+  {
+    "name": "Sofia Reyes",
+    "role": "6–8 CS Teacher",
+    "grade_band": "6-8",
+    "relationship": "Active",
+    "motivation": "Loyal Early Adopter",
+    "current_course": "CS Discoveries → AI Discoveries Transition",
+    "goals": [
+      "Get through Year 1 of AID without losing what made her a great CSD teacher — the energy, the creativity, the student relationships",
+      "Understand the new curriculum well enough to feel like she is teaching it, not just delivering it",
+      "Be honest with her principal about what is working and what isn't — she agreed to pilot, not to perform",
+      "Eventually help her colleagues make the same transition with less friction than she had"
+    ],
+    "pain_points": [
+      "CSD was hers — she built her practice around it over four years, and leaving it feels like a real loss, not just a scheduling change",
+      "Worried the creative, student-centered classroom she built will be hard to recreate in a course she doesn't yet know from the inside",
+      "Has looked at the AID materials and sees content that feels more abstract and technically dense than anything she taught in CSD — not sure her instincts will transfer",
+      "Her students know her as the CSD teacher; anxious about the identity reset, both for them and for herself",
+      "Does not want to be the cautionary tale — the teacher who tried the new thing and visibly struggled in front of kids"
+    ],
+    "ai_relationship": "Curious and honest about her limits. Sofia is not afraid of AI as a subject but she is realistic that her depth is uneven — comfortable with the creative and ethical dimensions, much less comfortable with the technical ones. She trusts that Code.org has thought about teachers like her. She is hoping that trust is warranted.",
+    "rebrand_risk": "The rebrand to CodeAI lands as one more thing happening at once. Her honest reaction: she's already nervous about the course change — and now the organization is changing its name too. She doesn't object to the direction. She just wishes the ground felt a little more stable. If the rebrand arrives without visible curriculum support, she reads it as signal that the organization is investing in its identity before investing in its teachers. That erodes exactly the trust that made her say yes in the first place.",
+    "needs": [
+      "A summer PD experience that acknowledges she is giving something up — not just gaining something new",
+      "Concrete connections between what she did well in CSD and what that looks like in AID — a bridge, not a clean break",
+      "Honest previews of where teachers have struggled in AID so she can prepare rather than be surprised",
+      "A community of other CSD-to-AID teachers she can stay in contact with through the school year",
+      "Reassurance — not hype — that Code.org built this course with teachers like her in mind"
+    ],
+    "quote": "I trust Code.org. That's the only reason I said yes. I just need that trust to be worth something when I'm standing in front of 28 kids in September with a curriculum I've never taught.",
+    "background": "Sofia has been teaching CS Discoveries to 6th, 7th, and 8th graders for four years — and it is genuinely one of the best things she has ever done professionally. She came to CS through a graphic design background and fell in love with CSD's creative, expressive approach to computing. She built her units around web design and interactive storytelling, and her students regularly produce work she is proud to put in front of families. She did not go looking for a change. Last spring, her district decided to pilot AI Discoveries for the upcoming school year and her principal asked her, specifically, to make the switch. She said yes because she has enough history with Code.org to believe they would not send her somewhere without a map. But she is not walking into this with her arms wide open. Age 39, mid-size suburban district in Colorado, 13 years in education, CS Discoveries (6th, 7th & 8th grade).",
+    "excited_about": "The possibility that AID lets her do something genuinely new with students who are already living inside AI whether she teaches it or not. The chance to be ahead of the curve for once — the teacher who piloted this before everyone else had to. And the possibility that the creative instincts she developed in CSD transfer more than she fears.",
+    "nervous_about": "That the technical depth of AID will expose gaps she can't paper over with good facilitation. That the classroom energy she spent four years building is tied to CSD specifically and won't survive the transition. That the rebrand and the course change are happening simultaneously and the ground won't feel stable until well into the school year.",
+    "success_looks_like": "Sofia finishes Year 1 of AID having taught it — not just survived it. Her students are engaged in the same ways they were in CSD, even if the content is different. She has a clear picture of what to do differently in Year 2. Her principal sees the pilot as a success and her colleagues come to her when it's their turn to make the switch.",
+    "failure_looks_like": "Sofia spends the year feeling like a first-year teacher again — reactive, underprepared, dependent on the material rather than leading it. The creative identity she built in CSD doesn't translate and her students notice the difference. She finishes the year questioning whether she made the right call, and is reluctant to advocate for the course to anyone else.",
+    "aim_feeling": "Honored that she was asked, and supported enough to believe she can deliver. She should feel like Code.org made this transition with her in mind — not as an afterthought, but as the exact teacher this course was designed for. Grounded, not just reassured. The goal is not to eliminate her nervousness; it is to give her enough to work with that the nervousness becomes productive.",
+    "comms_in_control": [
+      "Summer PD framing that explicitly honors the CSD-to-AID transition, not just AID as a fresh start",
+      "Direct communication ahead of the rebrand — she should hear from Code.org before she hears from anyone else",
+      "CSD-to-AID bridge materials: explicit connections between units, skills, and classroom approaches she already knows",
+      "Honest teacher-facing notes on where AID is hard and what to watch for",
+      "A peer cohort of CSD-to-AID transition teachers, connected before school year begins",
+      "CodeAI platform in-product messaging"
+    ],
+    "comms_out_of_control": [
+      "Her principal's expectations for the pilot and how success gets defined at the school level",
+      "Whether her students and their families respond positively to the course change",
+      "How other teachers in her building talk about the switch — publicly or in the hallways",
+      "District-level framing of the AI Discoveries pilot and what it signals about future CS direction"
+    ]
   }
 ]
