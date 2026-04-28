@@ -597,5 +597,55 @@
       "How other teachers in her building talk about the switch — publicly or in the hallways",
       "District-level framing of the AI Discoveries pilot and what it signals about future CS direction"
     ]
+  },
+  {
+    "name": "Amber Tillman",
+    "role": "3rd Grade Classroom Teacher",
+    "grade_band": "K-5",
+    "relationship": "Active (Informal)",
+    "motivation": "Pragmatic Adopter",
+    "current_course": "Code.org as Supplemental Tool",
+    "goals": [
+      "Keep doing what's working — a low-prep, student-engaging activity she can trust to run itself",
+      "Make sure whatever Code.org is now is still appropriate for 8-year-olds, full stop",
+      "Not have to explain a confusing name change to parents who already have vague concerns about technology",
+      "Avoid anything that puts AI in front of her students in ways she can't monitor or understand"
+    ],
+    "pain_points": [
+      "The word 'AI' in the name is going to raise flags with parents in her community — she will be the one fielding those questions, and she has no answers prepared",
+      "She uses Code.org informally, which means she has no professional relationship with the organization to draw on — no workshop, no facilitator, no point of contact",
+      "Has no way to evaluate whether CodeAI is still appropriate for young learners without someone she trusts telling her directly",
+      "Any friction in the platform — a new login flow, a changed interface, an unfamiliar landing page — could be enough for her to quietly stop using it",
+      "She does not have time to research this. If the answer is not simple and immediate, she will default to caution and move on"
+    ],
+    "ai_relationship": "Cautious and community-aware. Amber is not opposed to AI as a concept, but she teaches in a community where technology skepticism runs high and parent trust is hard-won. Her concern is not philosophical — it is practical. She cannot explain to a parent what AI means in an educational context if she doesn't fully understand it herself. Until she can, 'CodeAI' is a liability, not a selling point.",
+    "rebrand_risk": "Amber never gets any communication about the rebrand because she is not on a Code.org mailing list, has never created a teacher account, and has no formal relationship with the organization. She finds out the name has changed when a student says 'it looks different' or when a parent sends a message asking what 'CodeAI' is. She has no context, no talking points, and no one to call. She decides — quietly, without drama — that it is not worth the risk. The platform disappears from her classroom rotation without a single conversation. This is the most likely failure mode. Not resistance. Quiet disappearance.",
+    "needs": [
+      "A clear, jargon-free statement that CodeAI still has age-appropriate content for elementary students — specifically K–5",
+      "Simple, parent-ready language she can use if a family asks why their child is using something called 'CodeAI'",
+      "Assurance that the activities her students already use and love have not changed or disappeared",
+      "A frictionless transition — if the URL, the interface, or the student experience has changed in any visible way, she needs to know before her kids notice",
+      "No pressure to do more than she is already doing — she is not looking to become a CS teacher, she is looking to keep using a tool that works"
+    ],
+    "quote": "My kids love it. It's the one thing on a Friday afternoon that I know will hold their attention. I just need to know it's still safe — and that it still makes sense for 8-year-olds.",
+    "background": "Amber teaches a self-contained 3rd grade classroom in a small rural district where she is one of three teachers at her grade level and the only one who has ever used Code.org with students. She started using it four years ago after a colleague shared a link to Hour of Code during a staff meeting. She never attended a Code.org workshop and has never thought of herself as a CS teacher. Code.org lives in her classroom as a center activity, a Friday afternoon reward, and an early finisher option. She has never taught a full unit, never read a lesson plan — she opens the student-facing side of the platform, puts it on the board, and her students take it from there. Her students are unlikely to get CS from any other source. Age 34, small rural district in eastern Kentucky, 9 years in education, self-contained 3rd grade classroom.",
+    "excited_about": "Nothing yet — she doesn't know enough to be excited. If someone she trusted told her that CodeAI still has everything her students loved, that it's been reviewed for elementary appropriateness, and that she doesn't have to do anything differently, that would be enough. Excitement is not the goal. Reassurance is.",
+    "nervous_about": "That 'AI' means something she can't preview or control — that the platform her students click through independently now has chatbots, generative tools, or content that isn't right for 8-year-olds. That a parent will Google 'CodeAI' and come to her with concerns she cannot answer. That she will show up on a Friday and the platform will look different and she will have no time to troubleshoot.",
+    "success_looks_like": "Amber keeps using the platform exactly as she has been. Her students don't notice anything has changed. If a parent asks, she has one sentence ready. The Friday afternoon routine holds. For her students — who are getting CS from no other source — the informal exposure continues uninterrupted.",
+    "failure_looks_like": "Amber opens Code.org one Friday and something looks different or unfamiliar. She doesn't have time to investigate. She closes it, puts on a video instead, and mentally moves Code.org into the 'too complicated now' category. She never actively decides to stop — she just stops. Her students lose the only CS touchpoint they had, and no one at CodeAI ever knows it happened.",
+    "aim_feeling": "Unworried. The bar here is not inspiration — it is the absence of concern. Amber does not need to feel excited about CodeAI. She needs to feel confident that what she has been doing is still fine, still safe, and still available. If she reaches the other side of the rebrand without a moment of doubt, that is a win.",
+    "comms_in_control": [
+      "Elementary-specific rebrand FAQ: plain language, parent-ready, focused on safety and age-appropriateness",
+      "In-platform messaging visible to users who are not logged in or who access the student-facing side directly",
+      "Outreach through K–5 teacher networks, grade-level Facebook groups, and educator communities where informal users actually live",
+      "Simple one-pager or shareable graphic: 'What is CodeAI? What does this mean for my classroom?'",
+      "Ensuring Hour of Code and elementary entry points are prominently unchanged and easy to find post-rebrand"
+    ],
+    "comms_out_of_control": [
+      "Parent community responses to the name change — especially in rural communities with existing technology skepticism",
+      "Whether Amber is in any network where proactive CodeAI communication reaches her at all",
+      "How other teachers in her building talk about the change — or whether they notice it at all",
+      "Local news or social media coverage of 'AI in schools' that may color how CodeAI lands in her community"
+    ]
   }
 ]
