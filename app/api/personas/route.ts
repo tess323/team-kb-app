@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAllPersonas, upsertPersonaByName } from "@/lib/db";
 
+export const dynamic = "force-dynamic";
+
 export async function GET() {
   const personas = await getAllPersonas();
   return NextResponse.json(personas);
