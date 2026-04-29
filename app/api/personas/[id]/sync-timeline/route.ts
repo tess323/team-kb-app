@@ -135,7 +135,7 @@ export async function POST(
 
         const message = await client.messages.create({
           model: "claude-haiku-4-5-20251001",
-          max_tokens: 4096,
+          max_tokens: 8192,
           system: SYSTEM,
           messages: [{ role: "user", content: userContent + (kb ? `\n\n<knowledge_base>\n${kb}\n</knowledge_base>` : "") }],
         });
@@ -145,7 +145,24 @@ export async function POST(
         const match = fullText.match(/\{[\s\S]*\}/);
         if (!match) throw new Error("No JSON found in Claude response");
 
-        const parsed = JSON.parse(match[0]) as PersonaTimelineData;
+        // Escape any literal newlines/tabs inside JSON string values so parse doesn't fail.
+        let jsonStr = match[0];
+        {
+          let inString = false, escaped = false, out = "";
+          for (let i = 0; i < jsonStr.length; i++) {
+            const ch = jsonStr[i];
+            if (escaped) { out += ch; escaped = false; }
+            else if (ch === "\\") { out += ch; escaped = true; }
+            else if (ch === '"') { out += ch; inString = !inString; }
+            else if (inString && ch === "\n") { out += "\\n"; }
+            else if (inString && ch === "\r") { out += "\\r"; }
+            else if (inString && ch === "\t") { out += "\\t"; }
+            else { out += ch; }
+          }
+          jsonStr = out;
+        }
+
+        const parsed = JSON.parse(jsonStr) as PersonaTimelineData;
         parsed.lastSynced = new Date().toISOString();
 
         await savePersonaTimeline(personaId, JSON.stringify(parsed));
