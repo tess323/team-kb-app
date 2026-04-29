@@ -63,7 +63,11 @@ Strict rules:
 - state values: positive | neutral | warning | negative (no other values)
 - gaps: 3–6 strings
 - wins: 2–4 strings
-- Valid JSON only — no markdown fences`;
+- Valid JSON only — no markdown fences
+- NEVER use double-quote characters (") inside string values — rephrase to avoid them entirely
+- NEVER use backslash characters inside string values
+- NEVER use apostrophes that could be confused with quotes — plain language only
+- All string values must be safe to embed directly in JSON without any escaping`;
 
 function formatPersona(p: NonNullable<Awaited<ReturnType<typeof getPersonaById>>>): string {
   return [
@@ -145,24 +149,14 @@ export async function POST(
         const match = fullText.match(/\{[\s\S]*\}/);
         if (!match) throw new Error("No JSON found in Claude response");
 
-        // Escape any literal newlines/tabs inside JSON string values so parse doesn't fail.
-        let jsonStr = match[0];
-        {
-          let inString = false, escaped = false, out = "";
-          for (let i = 0; i < jsonStr.length; i++) {
-            const ch = jsonStr[i];
-            if (escaped) { out += ch; escaped = false; }
-            else if (ch === "\\") { out += ch; escaped = true; }
-            else if (ch === '"') { out += ch; inString = !inString; }
-            else if (inString && ch === "\n") { out += "\\n"; }
-            else if (inString && ch === "\r") { out += "\\r"; }
-            else if (inString && ch === "\t") { out += "\\t"; }
-            else { out += ch; }
-          }
-          jsonStr = out;
+        let parsed: PersonaTimelineData;
+        try {
+          parsed = JSON.parse(match[0]) as PersonaTimelineData;
+        } catch (parseErr) {
+          const pos = (parseErr as SyntaxError).message.match(/position (\d+)/)?.[1];
+          const ctx = pos ? match[0].slice(Math.max(0, Number(pos) - 60), Number(pos) + 60) : "";
+          throw new Error(`JSON parse failed: ${(parseErr as SyntaxError).message}${ctx ? ` — near: ${ctx}` : ""}`);
         }
-
-        const parsed = JSON.parse(jsonStr) as PersonaTimelineData;
         parsed.lastSynced = new Date().toISOString();
 
         await savePersonaTimeline(personaId, JSON.stringify(parsed));
