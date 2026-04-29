@@ -142,10 +142,18 @@ function PersonaAvatar({ name }: { name: string }) {
 }
 
 function PersonaCard({ persona }: { persona: PersonaRow }) {
+  const chips = [
+    persona.grade_band,
+    persona.relationship,
+    persona.motivation,
+  ].filter(Boolean) as string[];
+
+  const mutedChips = [persona.current_course].filter(Boolean) as string[];
+
   return (
     <Link
       href={`/personas/${persona.persona_id}`}
-      className="bg-white border border-parchment-dark rounded-lg p-3 flex flex-col gap-1.5 hover:shadow-md transition-shadow cursor-pointer"
+      className="bg-white border border-parchment-dark rounded-lg p-3 flex flex-col gap-2 hover:shadow-md transition-shadow cursor-pointer"
       style={{ borderRadius: 8 }}
     >
       <div className="flex items-center gap-2">
@@ -155,10 +163,32 @@ function PersonaCard({ persona }: { persona: PersonaRow }) {
           <p className="text-[11px] text-ink/45 leading-tight truncate">{persona.role}</p>
         </div>
       </div>
-      {persona.motivation && (
-        <span className="self-start text-[10px] px-2 py-0.5 rounded-full bg-parchment border border-parchment-dark text-parchment-text leading-tight">
-          {persona.motivation}
-        </span>
+
+      {persona.quote && (
+        <p className="text-[11px] text-ink/55 italic leading-snug line-clamp-2">
+          "{persona.quote}"
+        </p>
+      )}
+
+      {(chips.length > 0 || mutedChips.length > 0) && (
+        <div className="flex flex-wrap gap-1">
+          {chips.map((c) => (
+            <span
+              key={c}
+              className="text-[10px] px-1.5 py-0.5 rounded-full bg-parchment border border-parchment-dark text-parchment-text leading-tight"
+            >
+              {c}
+            </span>
+          ))}
+          {mutedChips.map((c) => (
+            <span
+              key={c}
+              className="text-[10px] px-1.5 py-0.5 rounded-full bg-cream-dark text-cream-text leading-tight"
+            >
+              {c}
+            </span>
+          ))}
+        </div>
       )}
     </Link>
   );
