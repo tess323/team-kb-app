@@ -257,7 +257,7 @@ export default async function Home() {
               className="text-ink leading-tight"
               style={{ fontFamily: "Georgia, serif", fontSize: 22, fontWeight: 400 }}
             >
-              CS Academy Rebrand
+              codeAI Rebrand
             </h1>
             <p className="text-[13px] text-ink/50 mt-1">
               {personas.length} personas · {PHASES.length} campaign phases · Knowledge base connected

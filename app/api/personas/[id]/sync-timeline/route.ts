@@ -9,7 +9,7 @@ const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
 const SYSTEM = `You are a communications strategist analysing how a product rebrand will land with a specific learner persona. You produce structured JSON data describing the communication journey.`;
 
-const PROMPT = `Generate a communications journey map for this persona covering a product rebrand (Code.org rebranding as "CS Academy") across 6 campaign phases.
+const PROMPT = `Generate a communications journey map for this persona covering a product rebrand (Code.org rebranding as "codeAI") across 6 campaign phases.
 
 Phases (use these exact keys):
 - pre-launch    → Apr 20 – May 16 (build-up, no public announcement yet)
