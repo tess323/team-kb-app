@@ -47,11 +47,31 @@ export default function PersonaJourneySection({
       const res = await fetch(`/api/personas/${personaId}/sync-timeline`, {
         method: "POST",
       });
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({})) as { error?: string };
-        throw new Error(data.error ?? "Sync failed");
+      if (!res.ok) throw new Error("Sync failed");
+
+      const reader = res.body!.getReader();
+      const decoder = new TextDecoder();
+
+      outer: while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        const lines = decoder.decode(value, { stream: true }).split("\n").filter(Boolean);
+        for (const line of lines) {
+          try {
+            const event = JSON.parse(line) as { type: string; error?: string };
+            if (event.type === "done") {
+              router.refresh();
+              break outer;
+            }
+            if (event.type === "error") {
+              throw new Error(event.error ?? "Sync failed");
+            }
+          } catch (parseErr) {
+            if (parseErr instanceof SyntaxError) continue;
+            throw parseErr;
+          }
+        }
       }
-      router.refresh();
     } catch (err: unknown) {
       setSyncError(err instanceof Error ? err.message : "Sync failed");
     } finally {

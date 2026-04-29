@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
 import { getPersonaById, savePersonaTimeline } from "@/lib/db-edge";
 import type { PersonaTimelineData } from "@/lib/timeline-types";
@@ -98,7 +98,12 @@ export async function POST(
   const personaId = Number(id);
 
   const persona = await getPersonaById(personaId);
-  if (!persona) return NextResponse.json({ error: "Persona not found" }, { status: 404 });
+  if (!persona) {
+    return new Response(
+      JSON.stringify({ type: "error", error: "Persona not found" }) + "\n",
+      { status: 404, headers: { "Content-Type": "text/plain; charset=utf-8" } }
+    );
+  }
 
   const syncedDoc = persona.synced_content
     ? `\n\n<persona_doc>\n${persona.synced_content.slice(0, 10000)}\n</persona_doc>`
@@ -110,33 +115,56 @@ export async function POST(
     syncedDoc,
   ].join("");
 
-  const message = await client.messages.create({
-    model: "claude-haiku-4-5-20251001",
-    max_tokens: 4096,
-    system: SYSTEM,
-    messages: [{ role: "user", content: userContent }],
+  const encoder = new TextEncoder();
+
+  const body = new ReadableStream({
+    async start(controller) {
+      const send = (data: Record<string, unknown>) =>
+        controller.enqueue(encoder.encode(JSON.stringify(data) + "\n"));
+
+      try {
+        // Send first byte immediately — prevents the Vercel gateway from
+        // issuing a 504 while Claude is generating the response.
+        send({ type: "start" });
+
+        const claudeStream = await client.messages.create({
+          model: "claude-haiku-4-5-20251001",
+          max_tokens: 4096,
+          stream: true,
+          system: SYSTEM,
+          messages: [{ role: "user", content: userContent }],
+        });
+
+        let fullText = "";
+        for await (const event of claudeStream) {
+          if (
+            event.type === "content_block_delta" &&
+            event.delta.type === "text_delta"
+          ) {
+            fullText += event.delta.text;
+          }
+        }
+
+        const match = fullText.match(/\{[\s\S]*\}/);
+        if (!match) throw new Error("No JSON found in Claude response");
+
+        const parsed = JSON.parse(match[0]) as PersonaTimelineData;
+        parsed.lastSynced = new Date().toISOString();
+
+        await savePersonaTimeline(personaId, JSON.stringify(parsed));
+        send({ type: "done", lastSynced: parsed.lastSynced });
+      } catch (err) {
+        send({
+          type: "error",
+          error: err instanceof Error ? err.message : "Sync failed",
+        });
+      } finally {
+        controller.close();
+      }
+    },
   });
 
-  const text = (message.content[0] as { text: string }).text;
-
-  // Extract outermost JSON object
-  const match = text.match(/\{[\s\S]*\}/);
-  if (!match) {
-    console.error("[sync-timeline] no JSON object in response:", text.slice(0, 300));
-    return NextResponse.json({ error: "Failed to parse timeline from Claude" }, { status: 500 });
-  }
-
-  let parsed: PersonaTimelineData;
-  try {
-    parsed = JSON.parse(match[0]) as PersonaTimelineData;
-  } catch (err) {
-    console.error("[sync-timeline] JSON parse error:", err);
-    return NextResponse.json({ error: "Invalid JSON from Claude" }, { status: 500 });
-  }
-
-  parsed.lastSynced = new Date().toISOString();
-
-  await savePersonaTimeline(personaId, JSON.stringify(parsed));
-
-  return NextResponse.json({ ok: true, lastSynced: parsed.lastSynced });
+  return new Response(body, {
+    headers: { "Content-Type": "text/plain; charset=utf-8" },
+  });
 }
