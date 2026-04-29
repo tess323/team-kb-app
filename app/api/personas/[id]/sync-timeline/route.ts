@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
 import { getPersonaById, savePersonaTimeline } from "@/lib/db-edge";
+import { fetchKnowledgeBaseEdge } from "@/lib/google-edge";
 import type { PersonaTimelineData } from "@/lib/timeline-types";
 
 export const runtime = "edge";
@@ -127,11 +128,25 @@ export async function POST(
         // issuing a 504 while Claude is generating the response.
         send({ type: "start" });
 
+        // Fetch KB using native fetch (Edge-compatible). 7s timeout — non-fatal.
+        let kb = "";
+        try {
+          kb = await Promise.race([
+            fetchKnowledgeBaseEdge(),
+            new Promise<string>((_, reject) =>
+              setTimeout(() => reject(new Error("KB timeout")), 7000)
+            ),
+          ]);
+          if (kb.length > 40000) kb = kb.slice(0, 40000) + "\n\n[KB truncated]";
+        } catch {
+          // continue without KB — Claude will use persona data only
+        }
+
         const message = await client.messages.create({
           model: "claude-haiku-4-5-20251001",
           max_tokens: 4096,
           system: SYSTEM,
-          messages: [{ role: "user", content: userContent }],
+          messages: [{ role: "user", content: userContent + (kb ? `\n\n<knowledge_base>\n${kb}\n</knowledge_base>` : "") }],
         });
 
         const fullText = (message.content[0] as { text: string }).text;
