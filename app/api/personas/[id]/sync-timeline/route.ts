@@ -139,7 +139,7 @@ export async function POST(
 
         const message = await client.messages.create({
           model: "claude-haiku-4-5-20251001",
-          max_tokens: 8192,
+          max_tokens: 5000,
           system: SYSTEM,
           messages: [{ role: "user", content: userContent + (kb ? `\n\n<knowledge_base>\n${kb}\n</knowledge_base>` : "") }],
         });

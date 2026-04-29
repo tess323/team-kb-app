@@ -64,6 +64,7 @@ export default function PersonaJourneySection({
       const reader = res.body!.getReader();
       const decoder = new TextDecoder();
 
+      let completed = false;
       outer: while (true) {
         const { done, value } = await reader.read();
         if (done) break;
@@ -72,6 +73,7 @@ export default function PersonaJourneySection({
           try {
             const event = JSON.parse(line) as SyncEvent;
             if (event.type === "done") {
+              completed = true;
               setSyncStatus("");
               router.refresh();
               break outer;
@@ -85,6 +87,7 @@ export default function PersonaJourneySection({
           }
         }
       }
+      if (!completed) throw new Error("Sync timed out — the request took too long. Try again.");
     } catch (err: unknown) {
       setSyncError(err instanceof Error ? err.message : "Sync failed");
     } finally {
