@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
-import { getPersonaById, savePersonaTimeline } from "@/lib/db";
+import { getPersonaById, savePersonaTimeline } from "@/lib/db-edge";
 import type { PersonaTimelineData } from "@/lib/timeline-types";
 
-export const maxDuration = 60;
+export const runtime = "edge";
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 

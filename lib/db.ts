@@ -2,7 +2,10 @@ import { createClient } from "@libsql/client";
 import { readFileSync } from "fs";
 import { resolve } from "path";
 
-const db = createClient({ url: "file:/tmp/conversations.db" });
+const db = createClient({
+  url: process.env.TURSO_URL ?? "file:/tmp/conversations.db",
+  authToken: process.env.TURSO_AUTH_TOKEN,
+});
 
 const PERSONA_NEW_COLUMNS = [
   "name TEXT",
