@@ -4,10 +4,10 @@ import { useState, FormEvent } from "react";
 import ReactMarkdown from "react-markdown";
 
 const SUGGESTED = [
-  "What does Janelle need before launch?",
+  "What are the key messages for the rebrand?",
   "When should we brief regional partners?",
   "What are the biggest communication gaps?",
-  "How does DeShawn feel about the rebrand?",
+  "What channels are we using at launch?",
 ];
 
 export default function AskCard() {

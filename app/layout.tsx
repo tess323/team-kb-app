@@ -24,6 +24,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               Rebrand UX
             </Link>
             <Link href="/" className="text-sm text-ink/60 hover:text-hunter transition-colors">
+              Home
+            </Link>
+            <Link href="/ask" className="text-sm text-ink/60 hover:text-hunter transition-colors">
               Ask a question
             </Link>
             <Link href="/personas" className="text-sm text-ink/60 hover:text-hunter transition-colors">
