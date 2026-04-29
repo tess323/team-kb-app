@@ -46,11 +46,19 @@ export default function PersonaJourneySection({
   async function handleSyncRequest() {
     setIsSyncing(true);
     setSyncError("");
-    setSyncStatus("Connecting…");
     try {
-      const res = await fetch(`/api/personas/${personaId}/sync-timeline`, {
-        method: "POST",
-      });
+      // Step 1: refresh KB cache via serverless route (no time limit).
+      setSyncStatus("Fetching knowledge base…");
+      const kbRes = await fetch("/api/kb-refresh", { method: "POST" });
+      const kbData = await kbRes.json() as { ok: boolean; chars?: number; error?: string };
+      if (!kbData.ok) {
+        setSyncStatus(`KB unavailable (${kbData.error ?? "unknown"}) — generating from persona…`);
+      } else {
+        setSyncStatus(`KB ready (${kbData.chars?.toLocaleString()} chars) — generating…`);
+      }
+
+      // Step 2: stream timeline generation from Edge function (reads KB from Turso cache).
+      const res = await fetch(`/api/personas/${personaId}/sync-timeline`, { method: "POST" });
       if (!res.ok) throw new Error("Sync failed");
 
       const reader = res.body!.getReader();
@@ -63,16 +71,6 @@ export default function PersonaJourneySection({
         for (const line of lines) {
           try {
             const event = JSON.parse(line) as SyncEvent;
-            if (event.type === "start") {
-              setSyncStatus("Fetching knowledge base…");
-            }
-            if (event.type === "kb") {
-              setSyncStatus(
-                event.fetched
-                  ? `KB loaded (${event.chars?.toLocaleString()} chars) — generating…`
-                  : `No KB: ${event.error ?? "unknown"} — generating from persona…`
-              );
-            }
             if (event.type === "done") {
               setSyncStatus("");
               router.refresh();

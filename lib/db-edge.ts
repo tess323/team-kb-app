@@ -43,3 +43,33 @@ export async function savePersonaTimeline(personaId: number, timelineData: strin
     args: [timelineData, personaId],
   });
 }
+
+export async function getKBCache(): Promise<{ content: string; updated_at: string } | null> {
+  const db = client();
+  try {
+    const result = await db.execute("SELECT content, updated_at FROM kb_cache WHERE id = 'main'");
+    if (!result.rows[0]) return null;
+    return {
+      content: result.rows[0].content as string,
+      updated_at: result.rows[0].updated_at as string,
+    };
+  } catch {
+    return null;
+  }
+}
+
+export async function saveKBCache(content: string): Promise<void> {
+  const db = client();
+  await db.execute(`
+    CREATE TABLE IF NOT EXISTS kb_cache (
+      id         TEXT PRIMARY KEY,
+      content    TEXT NOT NULL,
+      updated_at TEXT NOT NULL
+    )
+  `);
+  await db.execute({
+    sql: `INSERT INTO kb_cache (id, content, updated_at) VALUES ('main', ?, datetime('now'))
+          ON CONFLICT(id) DO UPDATE SET content = excluded.content, updated_at = excluded.updated_at`,
+    args: [content],
+  });
+}

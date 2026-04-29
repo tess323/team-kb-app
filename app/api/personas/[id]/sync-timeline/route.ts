@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
-import { getPersonaById, savePersonaTimeline } from "@/lib/db-edge";
+import { getPersonaById, savePersonaTimeline, getKBCache } from "@/lib/db-edge";
 import type { PersonaTimelineData } from "@/lib/timeline-types";
 
 export const runtime = "edge";
@@ -127,27 +127,11 @@ export async function POST(
         // issuing a 504 while Claude is generating the response.
         send({ type: "start" });
 
-        // Fetch KB via our own serverless route (uses proven gdrive.ts code).
-        let kb = "";
-        let kbError = "";
-        try {
-          const origin = new URL(_req.url).origin;
-          const kbRes = await Promise.race([
-            fetch(`${origin}/api/kb-content`),
-            new Promise<Response>((_, reject) =>
-              setTimeout(() => reject(new Error("KB timeout after 8s")), 8000)
-            ),
-          ]);
-          if (kbRes.ok) {
-            kb = await kbRes.text();
-            if (kb.length > 12000) kb = kb.slice(0, 12000) + "\n\n[KB truncated]";
-          } else {
-            kbError = `KB route returned ${kbRes.status}`;
-          }
-        } catch (err) {
-          kbError = err instanceof Error ? err.message : "KB fetch failed";
-        }
-        send({ type: "kb", fetched: kb.length > 0, chars: kb.length, error: kbError || undefined });
+        // Read KB from Turso cache (populated by /api/kb-refresh before this call).
+        const cached = await getKBCache();
+        const kb = cached?.content ?? "";
+        const kbError = cached ? undefined : "No KB cache — run a KB refresh first";
+        send({ type: "kb", fetched: kb.length > 0, chars: kb.length, error: kbError });
 
         const message = await client.messages.create({
           model: "claude-haiku-4-5-20251001",
