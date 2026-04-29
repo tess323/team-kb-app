@@ -153,10 +153,10 @@ function PersonaCard({ persona }: { persona: PersonaRow }) {
   return (
     <Link
       href={`/personas/${persona.persona_id}`}
-      className="bg-white border border-parchment-dark rounded-lg p-3 flex flex-col gap-2 hover:shadow-md transition-shadow cursor-pointer"
+      className="bg-white border border-parchment-dark rounded-lg p-4 flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer"
       style={{ borderRadius: 8 }}
     >
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2.5">
         <PersonaAvatar name={persona.name ?? "?"} />
         <div className="min-w-0">
           <p className="text-[13px] font-medium text-ink leading-tight truncate">{persona.name}</p>
@@ -165,8 +165,11 @@ function PersonaCard({ persona }: { persona: PersonaRow }) {
       </div>
 
       {persona.quote && (
-        <p className="text-[11px] text-ink/55 italic leading-snug line-clamp-2">
-          "{persona.quote}"
+        <p
+          className="text-[12px] text-ink/60 italic leading-relaxed line-clamp-3 pl-3"
+          style={{ borderLeft: "2px solid #E0D0B0" }}
+        >
+          {persona.quote}
         </p>
       )}
 
@@ -222,7 +225,7 @@ function PersonasCard({ personas }: { personas: PersonaRow[] }) {
         </Link>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
         {shown.map((p) => (
           <PersonaCard key={p.persona_id} persona={p} />
         ))}
