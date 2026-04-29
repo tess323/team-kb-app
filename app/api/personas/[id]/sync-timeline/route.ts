@@ -19,13 +19,18 @@ Phases (use these exact keys):
 - summer        → June–July (summer programme and conferences)
 - back-to-school → Aug–Sep (return to class, fall enrollment)
 
+CRITICAL — source rules:
+- Only include touchpoints for communications that are EXPLICITLY described in the knowledge base with a planned action, message, or event
+- Use the exact dates or date ranges stated in the knowledge base — do not infer or approximate dates
+- Do NOT invent communications, events, or touchpoints that are not explicitly mentioned in the knowledge base
+- If no communication is planned for a channel in a phase, use a gap touchpoint instead of fabricating one
+- For in-person touchpoints: only include events that are explicitly named with confirmed dates in the knowledge base — do not suggest generic events like conferences or PD days unless they are specifically documented
+
 For each touchpoint choose:
 - channel: "email" | "social" | "in-product" | "in-person" | "gap"
-  - "in-person" = conferences, events, workshops, in-school visits
-  - "gap" = a communication need that is currently unmet in the plan
+  - "in-person" = a specific named event or interaction explicitly documented in the knowledge base
+  - "gap" = a communication need that is currently unmet — nothing planned for this persona in this phase
 - variant: "win" (works well for this persona), "risk" (a concern), "neutral" (routine), "gap" (gap in the plan), "miss" (something this persona will likely miss)
-
-In-person touchpoints should reflect real conference and event opportunities from the knowledge base (e.g. CSTA, ISTE, district PD days, back-to-school nights). Include at least one in-person touchpoint per phase where a real event or interaction opportunity exists.
 
 Return a JSON object with EXACTLY this structure — valid JSON only, no markdown, no extra keys:
 {
@@ -55,7 +60,9 @@ Return a JSON object with EXACTLY this structure — valid JSON only, no markdow
 }
 
 Strict rules:
-- Aim for 2–4 touchpoints per phase; include a gap-channel touchpoint only where a real gap exists
+- Every non-gap touchpoint must correspond to a specific communication explicitly described in the knowledge base
+- Use gap touchpoints freely — it is better to show a gap than to invent a touchpoint
+- Aim for 2–4 touchpoints per phase total (including gaps)
 - emotionalArc must have exactly 6 entries, one per phase key listed above
 - phase values: pre-launch | launch | day-two | post-launch | summer | back-to-school (no other values)
 - channel values: email | social | in-product | in-person | gap (no other values)
