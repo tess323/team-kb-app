@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
 import { getPersonaById, savePersonaTimeline } from "@/lib/db";
-import { fetchKnowledgeBase } from "@/lib/gdrive";
 import type { PersonaTimelineData } from "@/lib/timeline-types";
 
 export const maxDuration = 60;
@@ -101,20 +100,6 @@ export async function POST(
   const persona = await getPersonaById(personaId);
   if (!persona) return NextResponse.json({ error: "Persona not found" }, { status: 404 });
 
-  // KB fetch — non-fatal if unavailable
-  let kb = "";
-  try {
-    kb = await Promise.race([
-      fetchKnowledgeBase(),
-      new Promise<string>((_, reject) =>
-        setTimeout(() => reject(new Error("KB timeout")), 6000)
-      ),
-    ]);
-    if (kb.length > 40000) kb = kb.slice(0, 40000) + "\n\n[KB truncated]";
-  } catch (err) {
-    console.error("[sync-timeline] KB fetch failed:", err);
-  }
-
   const syncedDoc = persona.synced_content
     ? `\n\n<persona_doc>\n${persona.synced_content.slice(0, 10000)}\n</persona_doc>`
     : "";
@@ -123,7 +108,6 @@ export async function POST(
     PROMPT,
     `\n\n<persona>\n${formatPersona(persona)}\n</persona>`,
     syncedDoc,
-    kb ? `\n\n<knowledge_base>\n${kb}\n</knowledge_base>` : "",
   ].join("");
 
   const message = await client.messages.create({
