@@ -10,6 +10,7 @@ const config: Config = {
     extend: {
       fontFamily: {
         sans: ['var(--font-jakarta)', 'sans-serif'],
+        serif: ['Georgia', 'serif'],
       },
       colors: {
         hunter:    { DEFAULT: '#2D4739', mid: '#3D6B52', light: '#A8D0B8', muted: '#D4E8DC' },
