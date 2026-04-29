@@ -28,6 +28,8 @@ interface PersonaJourneySectionProps {
   personaId: string;
 }
 
+type SyncEvent = { type: string; error?: string; fetched?: boolean; chars?: number };
+
 export default function PersonaJourneySection({
   timelineRaw,
   personaId,
@@ -35,6 +37,7 @@ export default function PersonaJourneySection({
   const router = useRouter();
   const [isSyncing, setIsSyncing] = useState(false);
   const [syncError, setSyncError] = useState("");
+  const [syncStatus, setSyncStatus] = useState("");
   const [chatDrawerOpen, setChatDrawerOpen] = useState(false);
   const [activeTouchpoint, setActiveTouchpoint] = useState<TimelineTouchpoint | null>(null);
 
@@ -43,6 +46,7 @@ export default function PersonaJourneySection({
   async function handleSyncRequest() {
     setIsSyncing(true);
     setSyncError("");
+    setSyncStatus("Connecting…");
     try {
       const res = await fetch(`/api/personas/${personaId}/sync-timeline`, {
         method: "POST",
@@ -58,8 +62,19 @@ export default function PersonaJourneySection({
         const lines = decoder.decode(value, { stream: true }).split("\n").filter(Boolean);
         for (const line of lines) {
           try {
-            const event = JSON.parse(line) as { type: string; error?: string };
+            const event = JSON.parse(line) as SyncEvent;
+            if (event.type === "start") {
+              setSyncStatus("Fetching knowledge base…");
+            }
+            if (event.type === "kb") {
+              setSyncStatus(
+                event.fetched
+                  ? `KB loaded (${event.chars?.toLocaleString()} chars) — generating…`
+                  : `No KB: ${event.error ?? "unknown"} — generating from persona…`
+              );
+            }
             if (event.type === "done") {
+              setSyncStatus("");
               router.refresh();
               break outer;
             }
@@ -76,6 +91,7 @@ export default function PersonaJourneySection({
       setSyncError(err instanceof Error ? err.message : "Sync failed");
     } finally {
       setIsSyncing(false);
+      setSyncStatus("");
     }
   }
 
@@ -86,6 +102,9 @@ export default function PersonaJourneySection({
 
   return (
     <>
+      {syncStatus && (
+        <p className="text-xs text-ink/50 mb-2">{syncStatus}</p>
+      )}
       {syncError && (
         <p className="text-rose text-xs mb-2">{syncError}</p>
       )}

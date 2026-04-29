@@ -130,17 +130,24 @@ export async function POST(
 
         // Fetch KB using native fetch (Edge-compatible). 7s timeout — non-fatal.
         let kb = "";
-        try {
-          kb = await Promise.race([
-            fetchKnowledgeBaseEdge(),
-            new Promise<string>((_, reject) =>
-              setTimeout(() => reject(new Error("KB timeout")), 7000)
-            ),
-          ]);
-          if (kb.length > 40000) kb = kb.slice(0, 40000) + "\n\n[KB truncated]";
-        } catch {
-          // continue without KB — Claude will use persona data only
+        let kbError = "";
+        const hasDocIds = !!(process.env.KB_DOC_IDS ?? "").trim();
+        if (hasDocIds) {
+          try {
+            kb = await Promise.race([
+              fetchKnowledgeBaseEdge(),
+              new Promise<string>((_, reject) =>
+                setTimeout(() => reject(new Error("KB timeout after 7s")), 7000)
+              ),
+            ]);
+            if (kb.length > 40000) kb = kb.slice(0, 40000) + "\n\n[KB truncated]";
+          } catch (err) {
+            kbError = err instanceof Error ? err.message : "KB fetch failed";
+          }
+        } else {
+          kbError = "KB_DOC_IDS env var not set";
         }
+        send({ type: "kb", fetched: kb.length > 0, chars: kb.length, error: kbError || undefined });
 
         const message = await client.messages.create({
           model: "claude-haiku-4-5-20251001",
