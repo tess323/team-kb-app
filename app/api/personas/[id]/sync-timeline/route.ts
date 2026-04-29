@@ -127,23 +127,14 @@ export async function POST(
         // issuing a 504 while Claude is generating the response.
         send({ type: "start" });
 
-        const claudeStream = await client.messages.create({
+        const message = await client.messages.create({
           model: "claude-haiku-4-5-20251001",
           max_tokens: 4096,
-          stream: true,
           system: SYSTEM,
           messages: [{ role: "user", content: userContent }],
         });
 
-        let fullText = "";
-        for await (const event of claudeStream) {
-          if (
-            event.type === "content_block_delta" &&
-            event.delta.type === "text_delta"
-          ) {
-            fullText += event.delta.text;
-          }
-        }
+        const fullText = (message.content[0] as { text: string }).text;
 
         const match = fullText.match(/\{[\s\S]*\}/);
         if (!match) throw new Error("No JSON found in Claude response");
