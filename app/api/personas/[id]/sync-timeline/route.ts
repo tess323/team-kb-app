@@ -4,7 +4,7 @@ import { getPersonaById, savePersonaTimeline } from "@/lib/db";
 import { fetchKnowledgeBase } from "@/lib/gdrive";
 import type { PersonaTimelineData } from "@/lib/timeline-types";
 
-export const maxDuration = 120;
+export const maxDuration = 60;
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
@@ -107,7 +107,7 @@ export async function POST(
     kb = await Promise.race([
       fetchKnowledgeBase(),
       new Promise<string>((_, reject) =>
-        setTimeout(() => reject(new Error("KB timeout")), 25000)
+        setTimeout(() => reject(new Error("KB timeout")), 6000)
       ),
     ]);
     if (kb.length > 40000) kb = kb.slice(0, 40000) + "\n\n[KB truncated]";
@@ -128,7 +128,7 @@ export async function POST(
 
   const message = await client.messages.create({
     model: "claude-haiku-4-5-20251001",
-    max_tokens: 8096,
+    max_tokens: 4096,
     system: SYSTEM,
     messages: [{ role: "user", content: userContent }],
   });
