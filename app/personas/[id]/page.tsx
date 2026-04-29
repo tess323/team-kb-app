@@ -4,6 +4,7 @@ import { getAllPersonas, getPersonaById } from "@/lib/db";
 import PersonaDocActions from "./PersonaDocActions";
 import MarkdownContent from "./MarkdownContent";
 import TimelineSection from "./TimelineSection";
+import PersonaJourneySection from "./PersonaJourneySection";
 
 export async function generateStaticParams() {
   const personas = await getAllPersonas();
@@ -68,9 +69,6 @@ export default async function PersonaDetailPage({
         />
       </div>
 
-      {/* Communication timeline */}
-      <TimelineSection personaId={persona.persona_id} />
-
       <div className="grid grid-cols-3 gap-4 mt-4">
 
         {/* Quote */}
@@ -96,6 +94,16 @@ export default async function PersonaDetailPage({
             <BulletCard label="Needs" items={persona.needs} accent="ochre" />
           </>
         )}
+
+      </div>
+
+      {/* Comms journey */}
+      <PersonaJourneySection
+        timelineRaw={persona.timeline_data}
+        personaId={String(persona.persona_id)}
+      />
+
+      <div className="grid grid-cols-3 gap-4 mt-4">
 
         {/* Excited | Nervous */}
         {persona.excited_about && (
@@ -131,45 +139,6 @@ export default async function PersonaDetailPage({
           </div>
         )}
 
-        {/* Comms channels */}
-        {(persona.comms_in_control || persona.comms_out_of_control) && (
-          <div className="col-span-3 bg-parchment border border-parchment-dark rounded-md p-6">
-            <BoxLabel>Communication channels</BoxLabel>
-            <div className="grid grid-cols-2 gap-6 mt-4">
-              {persona.comms_in_control && (
-                <div>
-                  <p className="text-2xs font-semibold text-ink/50 uppercase tracking-wide mb-3">
-                    Within our control
-                  </p>
-                  <ul className="space-y-2">
-                    {persona.comms_in_control.map((c, i) => (
-                      <li key={i} className="flex items-start gap-2 text-sm text-ink">
-                        <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-hunter shrink-0" />
-                        {c}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-              {persona.comms_out_of_control && (
-                <div>
-                  <p className="text-2xs font-semibold text-ink/50 uppercase tracking-wide mb-3">
-                    Outside our control
-                  </p>
-                  <ul className="space-y-2">
-                    {persona.comms_out_of_control.map((c, i) => (
-                      <li key={i} className="flex items-start gap-2 text-sm text-ink">
-                        <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-rose shrink-0" />
-                        {c}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-
         {/* AI Relationship | Rebrand Risk */}
         {(persona.ai_relationship || persona.rebrand_risk) && (
           <>
@@ -199,6 +168,10 @@ export default async function PersonaDetailPage({
         )}
 
       </div>
+
+      {/* Communication timeline — hidden for now, keep for later
+      <TimelineSection personaId={persona.persona_id} />
+      */}
     </main>
   );
 }

@@ -556,10 +556,10 @@ export default function TimelineSection({ personaId }: { personaId: number }) {
         let draft: TimelinePhase[] | null = null;
 
         if (data.timeline_data) {
-          try { live = JSON.parse(data.timeline_data); } catch { /* ignore */ }
+          try { const p = JSON.parse(data.timeline_data); if (Array.isArray(p)) live = p; } catch { /* ignore */ }
         }
         if (data.timeline_draft) {
-          try { draft = JSON.parse(data.timeline_draft); } catch { /* ignore */ }
+          try { const p = JSON.parse(data.timeline_draft); if (Array.isArray(p)) draft = p; } catch { /* ignore */ }
         }
 
         setLiveTimeline(live);
@@ -666,7 +666,7 @@ export default function TimelineSection({ personaId }: { personaId: number }) {
       if (!res.ok) throw new Error(data.error ?? "Commit failed");
 
       let live: TimelinePhase[] | null = null;
-      try { live = JSON.parse(data.timeline_data); } catch { /* ignore */ }
+      try { const p = JSON.parse(data.timeline_data); if (Array.isArray(p)) live = p; } catch { /* ignore */ }
 
       setLiveTimeline(live);
       setDraftTimeline(null);
